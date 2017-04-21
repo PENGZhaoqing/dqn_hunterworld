@@ -1,0 +1,159 @@
+/usr/bin/python2.7 /home/peng/mxnet/example/reinforcement-learning/parallel_actor_critic/train.py
+args=Namespace(env_type='PongDeterministic-v3', gpu=False, learning_rate=0.001, num_envs=16, num_episodes=100000, print_every=1, render=False, save_every=0, save_pre='checkpoints', seed=0, t_max=50)
+config={'grad_clip': True, 'clip_magnitude': 40, 'num_envs': 16, 'learning_rate': 0.001, 'ctx': cpu(0), 'update_rule': 'adam', 'vf_wt': 0.5, 'entropy_wt': 0.01, 'lambda_': 1.0, 'gamma': 0.99, 't_max': 50, 'hidden_size': 200, 'init_func': <mxnet.initializer.Xavier object at 0x7f87357d8e10>}
+[2017-04-20 19:02:40,731] Making new env: PongDeterministic-v3
+/home/peng/Desktop/gym/gym/envs/registration.py:17: DeprecationWarning: Parameters to load are deprecated.  Call .resolve and .require separately.
+  result = entry_point.load(False)
+[2017-04-20 19:02:40,755] Making new env: PongDeterministic-v3
+[2017-04-20 19:02:40,772] Making new env: PongDeterministic-v3
+[2017-04-20 19:02:40,790] Making new env: PongDeterministic-v3
+[2017-04-20 19:02:40,806] Making new env: PongDeterministic-v3
+[2017-04-20 19:02:40,822] Making new env: PongDeterministic-v3
+[2017-04-20 19:02:40,839] Making new env: PongDeterministic-v3
+[2017-04-20 19:02:40,856] Making new env: PongDeterministic-v3
+[2017-04-20 19:02:40,872] Making new env: PongDeterministic-v3
+[2017-04-20 19:02:40,889] Making new env: PongDeterministic-v3
+[2017-04-20 19:02:40,906] Making new env: PongDeterministic-v3
+[2017-04-20 19:02:40,924] Making new env: PongDeterministic-v3
+[2017-04-20 19:02:40,945] Making new env: PongDeterministic-v3
+[2017-04-20 19:02:40,963] Making new env: PongDeterministic-v3
+[2017-04-20 19:02:40,981] Making new env: PongDeterministic-v3
+[2017-04-20 19:02:40,999] Making new env: PongDeterministic-v3
+Batch 0 complete (17.42s) (17.4s elapsed) (episode 16), batch avg. reward: -16.50, running reward: -18.634
+Batch 1 complete (17.22s) (34.6s elapsed) (episode 32), batch avg. reward: -16.75, running reward: -18.357
+Batch 2 complete (17.55s) (52.2s elapsed) (episode 48), batch avg. reward: -16.69, running reward: -18.105
+Batch 3 complete (17.10s) (69.3s elapsed) (episode 64), batch avg. reward: -16.44, running reward: -17.854
+Batch 4 complete (18.34s) (87.6s elapsed) (episode 80), batch avg. reward: -17.56, running reward: -17.813
+Batch 5 complete (17.98s) (105.6s elapsed) (episode 96), batch avg. reward: -16.38, running reward: -17.613
+Batch 6 complete (18.72s) (124.3s elapsed) (episode 112), batch avg. reward: -18.19, running reward: -17.698
+Batch 7 complete (17.36s) (141.7s elapsed) (episode 128), batch avg. reward: -17.19, running reward: -17.625
+Batch 8 complete (16.63s) (158.3s elapsed) (episode 144), batch avg. reward: -17.00, running reward: -17.528
+Batch 9 complete (17.39s) (175.7s elapsed) (episode 160), batch avg. reward: -16.12, running reward: -17.322
+Batch 10 complete (17.10s) (192.8s elapsed) (episode 176), batch avg. reward: -17.50, running reward: -17.359
+Batch 11 complete (17.97s) (210.8s elapsed) (episode 192), batch avg. reward: -17.38, running reward: -17.360
+Batch 12 complete (16.96s) (227.7s elapsed) (episode 208), batch avg. reward: -17.06, running reward: -17.316
+Batch 13 complete (17.13s) (244.9s elapsed) (episode 224), batch avg. reward: -16.88, running reward: -17.254
+Batch 14 complete (17.24s) (262.1s elapsed) (episode 240), batch avg. reward: -16.88, running reward: -17.201
+Batch 15 complete (16.83s) (278.9s elapsed) (episode 256), batch avg. reward: -15.25, running reward: -16.904
+Batch 16 complete (16.97s) (295.9s elapsed) (episode 272), batch avg. reward: -15.88, running reward: -16.754
+Batch 17 complete (17.60s) (313.5s elapsed) (episode 288), batch avg. reward: -17.62, running reward: -16.882
+Batch 18 complete (18.11s) (331.6s elapsed) (episode 304), batch avg. reward: -15.56, running reward: -16.697
+Batch 19 complete (17.82s) (349.4s elapsed) (episode 320), batch avg. reward: -15.56, running reward: -16.526
+Batch 20 complete (19.18s) (368.6s elapsed) (episode 336), batch avg. reward: -15.19, running reward: -16.328
+Batch 21 complete (17.44s) (386.1s elapsed) (episode 352), batch avg. reward: -15.38, running reward: -16.183
+Batch 22 complete (18.98s) (405.0s elapsed) (episode 368), batch avg. reward: -16.00, running reward: -16.162
+Batch 23 complete (18.02s) (423.1s elapsed) (episode 384), batch avg. reward: -15.69, running reward: -16.088
+Batch 24 complete (19.38s) (442.4s elapsed) (episode 400), batch avg. reward: -15.94, running reward: -16.061
+Batch 25 complete (20.10s) (462.5s elapsed) (episode 416), batch avg. reward: -16.56, running reward: -16.131
+Batch 26 complete (19.08s) (481.6s elapsed) (episode 432), batch avg. reward: -13.94, running reward: -15.807
+Batch 27 complete (20.15s) (501.8s elapsed) (episode 448), batch avg. reward: -17.56, running reward: -16.071
+Batch 28 complete (16.93s) (518.7s elapsed) (episode 464), batch avg. reward: -14.25, running reward: -15.791
+Batch 29 complete (19.19s) (537.9s elapsed) (episode 480), batch avg. reward: -14.56, running reward: -15.609
+Batch 30 complete (19.29s) (557.2s elapsed) (episode 496), batch avg. reward: -16.31, running reward: -15.714
+Batch 31 complete (20.48s) (577.7s elapsed) (episode 512), batch avg. reward: -14.88, running reward: -15.588
+Batch 32 complete (20.04s) (597.7s elapsed) (episode 528), batch avg. reward: -15.56, running reward: -15.591
+Batch 33 complete (18.39s) (616.1s elapsed) (episode 544), batch avg. reward: -13.44, running reward: -15.275
+Batch 34 complete (19.64s) (635.7s elapsed) (episode 560), batch avg. reward: -13.12, running reward: -14.954
+Batch 35 complete (21.62s) (657.3s elapsed) (episode 576), batch avg. reward: -15.44, running reward: -15.022
+Batch 36 complete (20.53s) (677.9s elapsed) (episode 592), batch avg. reward: -15.06, running reward: -15.028
+Batch 37 complete (21.62s) (699.5s elapsed) (episode 608), batch avg. reward: -14.50, running reward: -14.943
+Batch 38 complete (22.11s) (721.6s elapsed) (episode 624), batch avg. reward: -14.50, running reward: -14.874
+Batch 39 complete (21.77s) (743.4s elapsed) (episode 640), batch avg. reward: -13.06, running reward: -14.600
+Batch 40 complete (21.44s) (764.8s elapsed) (episode 656), batch avg. reward: -14.06, running reward: -14.527
+Batch 41 complete (20.75s) (785.6s elapsed) (episode 672), batch avg. reward: -14.00, running reward: -14.443
+Batch 42 complete (21.19s) (806.7s elapsed) (episode 688), batch avg. reward: -12.69, running reward: -14.183
+Batch 43 complete (24.54s) (831.3s elapsed) (episode 704), batch avg. reward: -13.50, running reward: -14.080
+Batch 44 complete (22.56s) (853.8s elapsed) (episode 720), batch avg. reward: -11.75, running reward: -13.743
+Batch 45 complete (23.21s) (877.1s elapsed) (episode 736), batch avg. reward: -12.62, running reward: -13.577
+Batch 46 complete (30.27s) (907.3s elapsed) (episode 752), batch avg. reward: -12.12, running reward: -13.363
+Batch 47 complete (29.18s) (936.5s elapsed) (episode 768), batch avg. reward: -11.94, running reward: -13.152
+Batch 48 complete (30.54s) (967.1s elapsed) (episode 784), batch avg. reward: -11.31, running reward: -12.877
+Batch 49 complete (33.60s) (1000.7s elapsed) (episode 800), batch avg. reward: -11.06, running reward: -12.612
+Batch 50 complete (29.56s) (1030.2s elapsed) (episode 816), batch avg. reward: -12.00, running reward: -12.513
+Batch 51 complete (32.31s) (1062.5s elapsed) (episode 832), batch avg. reward: -10.38, running reward: -12.189
+Batch 52 complete (30.37s) (1092.9s elapsed) (episode 848), batch avg. reward: -10.69, running reward: -11.961
+Batch 53 complete (30.73s) (1123.6s elapsed) (episode 864), batch avg. reward: -10.12, running reward: -11.690
+Batch 54 complete (37.40s) (1161.0s elapsed) (episode 880), batch avg. reward: -9.12, running reward: -11.312
+Batch 55 complete (33.60s) (1194.6s elapsed) (episode 896), batch avg. reward: -8.00, running reward: -10.820
+Batch 56 complete (36.75s) (1231.4s elapsed) (episode 912), batch avg. reward: -8.94, running reward: -10.539
+Batch 57 complete (40.95s) (1272.3s elapsed) (episode 928), batch avg. reward: -7.81, running reward: -10.130
+Batch 58 complete (44.46s) (1316.8s elapsed) (episode 944), batch avg. reward: -7.06, running reward: -9.677
+Batch 59 complete (38.42s) (1355.2s elapsed) (episode 960), batch avg. reward: -7.56, running reward: -9.355
+Batch 60 complete (43.21s) (1398.4s elapsed) (episode 976), batch avg. reward: -6.50, running reward: -8.928
+Batch 61 complete (41.14s) (1439.6s elapsed) (episode 992), batch avg. reward: -5.88, running reward: -8.478
+Batch 62 complete (44.98s) (1484.6s elapsed) (episode 1008), batch avg. reward: -7.12, running reward: -8.281
+Batch 63 complete (42.77s) (1527.3s elapsed) (episode 1024), batch avg. reward: -5.44, running reward: -7.861
+Batch 64 complete (40.81s) (1568.1s elapsed) (episode 1040), batch avg. reward: -5.12, running reward: -7.461
+Batch 65 complete (46.85s) (1615.0s elapsed) (episode 1056), batch avg. reward: -4.88, running reward: -7.080
+Batch 66 complete (39.13s) (1654.1s elapsed) (episode 1072), batch avg. reward: -4.12, running reward: -6.645
+Batch 67 complete (46.97s) (1701.1s elapsed) (episode 1088), batch avg. reward: -3.50, running reward: -6.174
+Batch 68 complete (50.97s) (1752.1s elapsed) (episode 1104), batch avg. reward: -2.38, running reward: -5.601
+Batch 69 complete (46.30s) (1798.4s elapsed) (episode 1120), batch avg. reward: -1.00, running reward: -4.921
+Batch 70 complete (52.55s) (1850.9s elapsed) (episode 1136), batch avg. reward: -1.94, running reward: -4.475
+Batch 71 complete (59.08s) (1910.0s elapsed) (episode 1152), batch avg. reward: 2.81, running reward: -3.396
+Batch 72 complete (53.44s) (1963.4s elapsed) (episode 1168), batch avg. reward: 4.44, running reward: -2.238
+Batch 73 complete (49.43s) (2012.9s elapsed) (episode 1184), batch avg. reward: 4.81, running reward: -1.195
+Batch 74 complete (52.61s) (2065.5s elapsed) (episode 1200), batch avg. reward: 5.19, running reward: -0.241
+Batch 75 complete (52.53s) (2118.0s elapsed) (episode 1216), batch avg. reward: 7.19, running reward: 0.871
+Batch 76 complete (52.13s) (2170.1s elapsed) (episode 1232), batch avg. reward: 8.12, running reward: 1.948
+Batch 77 complete (53.31s) (2223.4s elapsed) (episode 1248), batch avg. reward: 9.25, running reward: 3.026
+Batch 78 complete (49.84s) (2273.3s elapsed) (episode 1264), batch avg. reward: 10.62, running reward: 4.157
+Batch 79 complete (47.90s) (2321.2s elapsed) (episode 1280), batch avg. reward: 12.12, running reward: 5.337
+Batch 80 complete (36.18s) (2357.4s elapsed) (episode 1296), batch avg. reward: 15.31, running reward: 6.820
+Batch 81 complete (35.79s) (2393.1s elapsed) (episode 1312), batch avg. reward: 17.06, running reward: 8.346
+Batch 82 complete (35.74s) (2428.9s elapsed) (episode 1328), batch avg. reward: 17.00, running reward: 9.623
+Batch 83 complete (35.70s) (2464.6s elapsed) (episode 1344), batch avg. reward: 17.06, running reward: 10.724
+Batch 84 complete (35.87s) (2500.5s elapsed) (episode 1360), batch avg. reward: 17.25, running reward: 11.692
+Batch 85 complete (35.89s) (2536.3s elapsed) (episode 1376), batch avg. reward: 18.12, running reward: 12.642
+Batch 86 complete (35.72s) (2572.1s elapsed) (episode 1392), batch avg. reward: 17.31, running reward: 13.336
+Batch 87 complete (36.93s) (2609.0s elapsed) (episode 1408), batch avg. reward: 18.00, running reward: 14.029
+Batch 88 complete (36.96s) (2645.9s elapsed) (episode 1424), batch avg. reward: 18.81, running reward: 14.737
+Batch 89 complete (36.94s) (2682.9s elapsed) (episode 1440), batch avg. reward: 18.31, running reward: 15.267
+Batch 90 complete (37.03s) (2719.9s elapsed) (episode 1456), batch avg. reward: 18.50, running reward: 15.743
+Batch 91 complete (37.69s) (2757.6s elapsed) (episode 1472), batch avg. reward: 17.94, running reward: 16.076
+Batch 92 complete (37.42s) (2795.0s elapsed) (episode 1488), batch avg. reward: 18.75, running reward: 16.477
+Batch 93 complete (37.72s) (2832.7s elapsed) (episode 1504), batch avg. reward: 18.94, running reward: 16.848
+Batch 94 complete (37.52s) (2870.3s elapsed) (episode 1520), batch avg. reward: 18.25, running reward: 17.056
+Batch 95 complete (37.32s) (2907.6s elapsed) (episode 1536), batch avg. reward: 18.25, running reward: 17.231
+Batch 96 complete (37.21s) (2944.8s elapsed) (episode 1552), batch avg. reward: 18.12, running reward: 17.358
+Batch 97 complete (37.17s) (2982.0s elapsed) (episode 1568), batch avg. reward: 19.19, running reward: 17.633
+Batch 98 complete (37.30s) (3019.3s elapsed) (episode 1584), batch avg. reward: 19.19, running reward: 17.867
+Batch 99 complete (37.67s) (3056.9s elapsed) (episode 1600), batch avg. reward: 19.38, running reward: 18.089
+Batch 100 complete (37.35s) (3094.3s elapsed) (episode 1616), batch avg. reward: 19.81, running reward: 18.341
+Batch 101 complete (37.52s) (3131.8s elapsed) (episode 1632), batch avg. reward: 18.38, running reward: 18.348
+Batch 102 complete (38.07s) (3169.9s elapsed) (episode 1648), batch avg. reward: 19.25, running reward: 18.486
+Batch 103 complete (37.85s) (3207.7s elapsed) (episode 1664), batch avg. reward: 19.06, running reward: 18.572
+Batch 104 complete (37.55s) (3245.3s elapsed) (episode 1680), batch avg. reward: 18.12, running reward: 18.515
+Batch 105 complete (37.70s) (3283.0s elapsed) (episode 1696), batch avg. reward: 19.00, running reward: 18.584
+Batch 106 complete (38.43s) (3321.4s elapsed) (episode 1712), batch avg. reward: 18.38, running reward: 18.564
+Batch 107 complete (38.35s) (3359.7s elapsed) (episode 1728), batch avg. reward: 19.19, running reward: 18.657
+Batch 108 complete (38.07s) (3397.8s elapsed) (episode 1744), batch avg. reward: 18.62, running reward: 18.649
+Batch 109 complete (37.71s) (3435.5s elapsed) (episode 1760), batch avg. reward: 18.81, running reward: 18.676
+Batch 110 complete (38.06s) (3473.6s elapsed) (episode 1776), batch avg. reward: 18.56, running reward: 18.656
+Batch 111 complete (37.80s) (3511.4s elapsed) (episode 1792), batch avg. reward: 19.25, running reward: 18.752
+Batch 112 complete (38.18s) (3549.6s elapsed) (episode 1808), batch avg. reward: 19.81, running reward: 18.907
+Batch 113 complete (38.11s) (3587.7s elapsed) (episode 1824), batch avg. reward: 18.94, running reward: 18.915
+Batch 114 complete (37.89s) (3625.6s elapsed) (episode 1840), batch avg. reward: 18.81, running reward: 18.901
+Batch 115 complete (37.62s) (3663.2s elapsed) (episode 1856), batch avg. reward: 19.62, running reward: 19.003
+Batch 116 complete (37.78s) (3701.0s elapsed) (episode 1872), batch avg. reward: 18.62, running reward: 18.953
+Batch 117 complete (38.29s) (3739.2s elapsed) (episode 1888), batch avg. reward: 19.56, running reward: 19.042
+Batch 118 complete (39.24s) (3778.5s elapsed) (episode 1904), batch avg. reward: 18.88, running reward: 19.017
+Batch 119 complete (37.78s) (3816.3s elapsed) (episode 1920), batch avg. reward: 18.69, running reward: 18.964
+Batch 120 complete (37.91s) (3854.2s elapsed) (episode 1936), batch avg. reward: 19.12, running reward: 18.990
+Batch 121 complete (37.68s) (3891.9s elapsed) (episode 1952), batch avg. reward: 19.75, running reward: 19.103
+Batch 122 complete (37.49s) (3929.4s elapsed) (episode 1968), batch avg. reward: 19.38, running reward: 19.147
+Batch 123 complete (38.50s) (3967.9s elapsed) (episode 1984), batch avg. reward: 20.19, running reward: 19.301
+Batch 124 complete (40.10s) (4007.9s elapsed) (episode 2000), batch avg. reward: 19.44, running reward: 19.322
+Batch 125 complete (38.18s) (4046.1s elapsed) (episode 2016), batch avg. reward: 20.50, running reward: 19.496
+Batch 126 complete (38.07s) (4084.2s elapsed) (episode 2032), batch avg. reward: 19.50, running reward: 19.499
+Batch 127 complete (38.01s) (4122.2s elapsed) (episode 2048), batch avg. reward: 19.44, running reward: 19.497
+Batch 128 complete (37.89s) (4160.1s elapsed) (episode 2064), batch avg. reward: 19.75, running reward: 19.538
+Batch 129 complete (40.85s) (4200.9s elapsed) (episode 2080), batch avg. reward: 20.00, running reward: 19.608
+Batch 130 complete (38.49s) (4239.4s elapsed) (episode 2096), batch avg. reward: 19.06, running reward: 19.533
+Batch 131 complete (38.15s) (4277.6s elapsed) (episode 2112), batch avg. reward: 19.56, running reward: 19.534
+Batch 132 complete (38.05s) (4315.6s elapsed) (episode 2128), batch avg. reward: 18.94, running reward: 19.445
+Batch 133 complete (38.04s) (4353.7s elapsed) (episode 2144), batch avg. reward: 19.75, running reward: 19.486
+Batch 134 complete (38.20s) (4391.9s elapsed) (episode 2160), batch avg. reward: 18.31, running reward: 19.310
+Batch 135 complete (38.99s) (4430.9s elapsed) (episode 2176), batch avg. reward: 19.38, running reward: 19.322
+Batch 136 complete (42.24s) (4473.1s elapsed) (episode 2192), batch avg. reward: 20.44, running reward: 19.486
+Traceback (most recent call last):

@@ -1,0 +1,55 @@
+2017-04-18 21:41:20,311 - root - INFO - Nework Params: 
+2017-04-18 21:41:20,311 - root - INFO -    fc2_weight: <NDArray 64x128 @gpu(0)>
+2017-04-18 21:41:20,311 - root - INFO -    qvalue_weight: <NDArray 4x64 @gpu(0)>
+2017-04-18 21:41:20,311 - root - INFO -    fc1_weight: <NDArray 128x74 @gpu(0)>
+2017-04-18 21:41:20,311 - root - INFO -    dqn_action: <NDArray 32 @gpu(0)>
+2017-04-18 21:41:20,311 - root - INFO -    fc2_bias: <NDArray 64 @gpu(0)>
+2017-04-18 21:41:20,311 - root - INFO -    data: <NDArray 32x74 @gpu(0)>
+2017-04-18 21:41:20,311 - root - INFO -    dqn_target: <NDArray 32 @gpu(0)>
+2017-04-18 21:41:20,312 - root - INFO -    fc1_bias: <NDArray 128 @gpu(0)>
+2017-04-18 21:41:20,312 - root - INFO -    qvalue_bias: <NDArray 4 @gpu(0)>
+2017-04-18 21:41:20,312 - root - INFO - Nework Aux Params: 
+2017-04-18 21:41:20,312 - root - INFO - Optimizer Params: <class 'mxnet.optimizer.Adam'>
+2017-04-18 21:41:20,312 - root - INFO -    epsilon: 1e-08
+2017-04-18 21:41:20,312 - root - INFO -    beta2: 0.999
+2017-04-18 21:41:20,312 - root - INFO -    beta1: 0.9
+2017-04-18 21:41:20,312 - root - INFO -    rescale_grad: 1
+2017-04-18 21:41:20,312 - root - INFO -    wd: 0.0
+2017-04-18 21:41:20,312 - root - INFO -    lr: 0.0002
+2017-04-18 21:41:31,605 - root - INFO - Nework Params: 
+2017-04-18 21:41:31,605 - root - INFO -    fc2_weight: <NDArray 64x128 @gpu(0)>
+2017-04-18 21:41:31,605 - root - INFO -    qvalue_weight: <NDArray 4x64 @gpu(0)>
+2017-04-18 21:41:31,605 - root - INFO -    fc1_weight: <NDArray 128x74 @gpu(0)>
+2017-04-18 21:41:31,605 - root - INFO -    dqn_action: <NDArray 32 @gpu(0)>
+2017-04-18 21:41:31,605 - root - INFO -    fc2_bias: <NDArray 64 @gpu(0)>
+2017-04-18 21:41:31,605 - root - INFO -    data: <NDArray 32x74 @gpu(0)>
+2017-04-18 21:41:31,606 - root - INFO -    dqn_target: <NDArray 32 @gpu(0)>
+2017-04-18 21:41:31,606 - root - INFO -    fc1_bias: <NDArray 128 @gpu(0)>
+2017-04-18 21:41:31,606 - root - INFO -    qvalue_bias: <NDArray 4 @gpu(0)>
+2017-04-18 21:41:31,606 - root - INFO - Nework Aux Params: 
+2017-04-18 21:41:31,606 - root - INFO - Optimizer Params: <class 'mxnet.optimizer.Adam'>
+2017-04-18 21:41:31,606 - root - INFO -    epsilon: 1e-08
+2017-04-18 21:41:31,606 - root - INFO -    beta2: 0.999
+2017-04-18 21:41:31,606 - root - INFO -    beta1: 0.9
+2017-04-18 21:41:31,606 - root - INFO -    rescale_grad: 1
+2017-04-18 21:41:31,606 - root - INFO -    wd: 0.0
+2017-04-18 21:41:31,606 - root - INFO -    lr: 0.0002
+2017-04-18 21:41:45,057 - root - INFO - Nework Params: 
+2017-04-18 21:41:45,057 - root - INFO -    fc2_weight: <NDArray 64x128 @gpu(0)>
+2017-04-18 21:41:45,057 - root - INFO -    qvalue_weight: <NDArray 4x64 @gpu(0)>
+2017-04-18 21:41:45,057 - root - INFO -    fc1_weight: <NDArray 128x74 @gpu(0)>
+2017-04-18 21:41:45,057 - root - INFO -    dqn_action: <NDArray 32 @gpu(0)>
+2017-04-18 21:41:45,057 - root - INFO -    fc2_bias: <NDArray 64 @gpu(0)>
+2017-04-18 21:41:45,057 - root - INFO -    data: <NDArray 32x74 @gpu(0)>
+2017-04-18 21:41:45,058 - root - INFO -    dqn_target: <NDArray 32 @gpu(0)>
+2017-04-18 21:41:45,058 - root - INFO -    fc1_bias: <NDArray 128 @gpu(0)>
+2017-04-18 21:41:45,058 - root - INFO -    qvalue_bias: <NDArray 4 @gpu(0)>
+2017-04-18 21:41:45,058 - root - INFO - Nework Aux Params: 
+2017-04-18 21:41:45,058 - root - INFO - Optimizer Params: <class 'mxnet.optimizer.Adam'>
+2017-04-18 21:41:45,058 - root - INFO -    epsilon: 1e-08
+2017-04-18 21:41:45,058 - root - INFO -    beta2: 0.999
+2017-04-18 21:41:45,058 - root - INFO -    beta1: 0.9
+2017-04-18 21:41:45,058 - root - INFO -    rescale_grad: 1
+2017-04-18 21:41:45,058 - root - INFO -    wd: 0.0
+2017-04-18 21:41:45,058 - root - INFO -    lr: 0.0002
+2017-04-18 21:41:51,779 - root - INFO - Epoch:0, Episode:1, Steps Left:95000/5000/100000, Reward:-190.000000, fps:743.958718, Exploration:0.991092, Collision:0.043800/219 , Avg Loss:0.667314/990, Avg Q Value:0.030295/13 

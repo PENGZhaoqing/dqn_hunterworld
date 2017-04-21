@@ -1,0 +1,3 @@
+2017-04-13 21:19:31,087 - root - INFO - Epoch:0, Episode:1, Steps Left:99213/787/100000, Reward:-33.000000, fps:1543.748549, Exploration:1.000000, Collision:0.047014/37 
+2017-04-13 21:19:31,156 - root - INFO - Epoch:0, Episode:2, Steps Left:99091/122/100000, Reward:-3.000000, fps:1781.095197, Exploration:1.000000, Collision:0.024590/3 
+2017-04-13 21:19:33,853 - root - INFO - Epoch:0, Episode:3, Steps Left:94591/4500/100000, Reward:-137.000000, fps:1668.348595, Exploration:1.000000, Collision:0.042667/192 

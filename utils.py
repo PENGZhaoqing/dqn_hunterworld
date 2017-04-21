@@ -11,6 +11,7 @@ import ast
 import inspect
 import collections
 import numbers
+
 try:
     import cPickle as pickle
 except:
@@ -20,17 +21,48 @@ import time
 import mxnet as mx
 import mxnet.ndarray as nd
 
-
 _ctx = mx.cpu()
-_numpy_rng = numpy.random.RandomState(123456)
+
+
+def print_params(network):
+    network_params = network.get_params()
+    assert network_params is not None, "Fatal Error!"
+    logging.info("Nework Params: ")
+    for k, v in network_params[0].items():
+        logging.info("   %s: %s" % (k, v))
+
+    optimizer = network._optimizer
+    logging.info("Optimizer Params: " + str(optimizer.__class__))
+    for k, v in optimizer.kwargs.items():
+        logging.info("   %s: %s" % (k, v))
+
+    logging.info("   wd: " + str(optimizer.wd))
+    logging.info("   lr: " + str(optimizer.lr))
+
+
+def print_params1(network):
+    arg_params = network.arg_dict
+    aux_params = network.aux_dict
+    assert arg_params is not None, "Fatal Error!"
+    logging.info("Nework Params: ")
+    for k, v in arg_params.items():
+        logging.info("   %s: %s" % (k, v))
+
+    logging.info("Nework Aux Params: ")
+    for k, v in aux_params.items():
+        logging.info("   %s: %s" % (k, v))
+
+    optimizer = network.updater.optimizer
+    logging.info("Optimizer Params: " + str(optimizer.__class__))
+    for k, v in optimizer.kwargs.items():
+        logging.info("   %s: %s" % (k, v))
+
+    logging.info("   wd: " + str(optimizer.wd))
+    logging.info("   lr: " + str(optimizer.lr))
 
 
 def get_default_ctx():
     return _ctx
-
-
-def get_numpy_rng():
-    return _numpy_rng
 
 
 def get_saving_path(prefix="", epoch=None):
@@ -43,39 +75,28 @@ def get_saving_path(prefix="", epoch=None):
     return sym_saving_path, param_saving_path, misc_saving_path
 
 
-def logging_config(name=None, level=logging.DEBUG, console_level=logging.DEBUG):
-    if name is None:
+def logging_config(folder_name=None, name=None, level=logging.DEBUG, console_level=logging.DEBUG):
+    if name is None or folder_name is None:
         name = inspect.stack()[1][1].split('.')[0]
-    folder = os.path.join(os.getcwd(), name)
+        folder_name = inspect.stack()[1][1].split('.')[0]
+    folder = os.path.join(os.getcwd(), folder_name)
     if not os.path.exists(folder):
         os.makedirs(folder)
-    logpath = os.path.join(folder, name + ".log")
-    print("All Logs will be saved to %s"  %logpath)
+    now = time.strftime("%m:%d:%H:%M", time.localtime(time.time()))
+    logpath = os.path.join(folder, name + "_" + str(now) + "_adam-0.002.log")
+    print("All Logs will be saved to %s" % logpath)
     logging.root.setLevel(level)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     logfile = logging.FileHandler(logpath)
     logfile.setLevel(level)
     logfile.setFormatter(formatter)
     logging.root.addHandler(logfile)
-    #TODO Update logging patterns in other files
-    logconsole = logging.StreamHandler()
-    logconsole.setLevel(console_level)
-    logconsole.setFormatter(formatter)
-    logging.root.addHandler(logconsole)
+    # TODO Update logging patterns in other files
+    # logconsole = logging.StreamHandler()
+    # logconsole.setLevel(console_level)
+    # logconsole.setFormatter(formatter)
+    # logging.root.addHandler(logconsole)
     return folder
-
-
-def save_params(dir_path=os.curdir, epoch=None, name="", params=None, aux_states=None,
-                ctx=mx.cpu()):
-    prefix = os.path.join(dir_path, name)
-    _, param_saving_path, _ = get_saving_path(prefix, epoch)
-    if not os.path.isdir(dir_path) and not (dir_path == ""):
-        os.makedirs(dir_path)
-    save_dict = {('arg:%s' % k): v.copyto(ctx) for k, v in params.items()}
-    save_dict.update({('aux:%s' % k): v.copyto(ctx) for k, v in aux_states.items()})
-    nd.save(param_saving_path, save_dict)
-    return param_saving_path
-
 
 def save_misc(dir_path=os.curdir, epoch=None, name="", content=None):
     prefix = os.path.join(dir_path, name)
@@ -103,7 +124,7 @@ def safe_eval(expr):
 
 def norm_clipping(params_grad, threshold):
     assert isinstance(params_grad, dict)
-    norm_val = numpy.sqrt(sum([nd.norm(grad).asnumpy()[0]**2 for grad in params_grad.values()]))
+    norm_val = numpy.sqrt(sum([nd.norm(grad).asnumpy()[0] ** 2 for grad in params_grad.values()]))
     # print('grad norm: %g' % norm_val)
     ratio = 1.0
     if norm_val > threshold:
@@ -193,7 +214,7 @@ def npy_softmax(x, axis=1):
 
 
 def npy_sigmoid(x):
-    return 1/(1 + numpy.exp(-x))
+    return 1 / (1 + numpy.exp(-x))
 
 
 def npy_onehot(x, num):
@@ -201,6 +222,7 @@ def npy_onehot(x, num):
     ret[numpy.arange(x.size), x.ravel()] = 1
     ret = ret.reshape(x.shape + (num,))
     return ret
+
 
 def npy_binary_entropy(prediction, target):
     assert prediction.shape == target.shape
@@ -292,9 +314,9 @@ def get_sym_list(syms, default_names=None, default_shapes=None):
     if isinstance(syms, (list, tuple)):
         if default_names is not None and len(syms) != len(default_names):
             raise ValueError("Size of symbols do not match expectation. Received %d, Expected %d. "
-                             "syms=%s, names=%s" %(len(syms), len(default_names),
-                                                   str(list(sym.name for sym in syms)),
-                                                   str(default_names)))
+                             "syms=%s, names=%s" % (len(syms), len(default_names),
+                                                    str(list(sym.name for sym in syms)),
+                                                    str(default_names)))
         return list(syms)
     else:
         if default_names is not None and len(default_names) != 1:
@@ -317,10 +339,10 @@ def get_numeric_list(values, typ, expected_len=None):
             ret = [typ(value) for value in values]
             return ret
         except(ValueError):
-            print("Need iterable with numeric elements, received: %s" %str(values))
+            print("Need iterable with numeric elements, received: %s" % str(values))
             sys.exit(1)
     else:
-        raise ValueError("Unaccepted value type, values=%s" %str(values))
+        raise ValueError("Unaccepted value type, values=%s" % str(values))
 
 
 def get_int_list(values, expected_len=None):

@@ -1,0 +1,105 @@
+2017-04-18 21:03:19,121 - root - INFO - Nework Params: 
+2017-04-18 21:03:19,122 - root - INFO -    fc2_weight: <NDArray 64x128 @gpu(0)>
+2017-04-18 21:03:19,122 - root - INFO -    qvalue_weight: <NDArray 4x64 @gpu(0)>
+2017-04-18 21:03:19,122 - root - INFO -    fc1_weight: <NDArray 128x74 @gpu(0)>
+2017-04-18 21:03:19,122 - root - INFO -    dqn_action: <NDArray 32 @gpu(0)>
+2017-04-18 21:03:19,122 - root - INFO -    fc2_bias: <NDArray 64 @gpu(0)>
+2017-04-18 21:03:19,122 - root - INFO -    data: <NDArray 32x74 @gpu(0)>
+2017-04-18 21:03:19,122 - root - INFO -    dqn_target: <NDArray 32 @gpu(0)>
+2017-04-18 21:03:19,122 - root - INFO -    fc1_bias: <NDArray 128 @gpu(0)>
+2017-04-18 21:03:19,122 - root - INFO -    qvalue_bias: <NDArray 4 @gpu(0)>
+2017-04-18 21:03:19,122 - root - INFO - Nework Aux Params: 
+2017-04-18 21:03:19,122 - root - INFO - Optimizer Params: <class 'mxnet.optimizer.Adam'>
+2017-04-18 21:03:19,122 - root - INFO -    epsilon: 1e-08
+2017-04-18 21:03:19,122 - root - INFO -    beta2: 0.999
+2017-04-18 21:03:19,122 - root - INFO -    beta1: 0.9
+2017-04-18 21:03:19,122 - root - INFO -    rescale_grad: 1
+2017-04-18 21:03:19,122 - root - INFO -    wd: 0.0
+2017-04-18 21:03:19,122 - root - INFO -    lr: 0.0002
+2017-04-18 21:03:26,060 - root - INFO - Epoch:0, Episode:1, Steps Left:95000/5000/100000, Reward:-113.000000, fps:720.679260, Exploration:0.991092, Collision:0.037400/187 , Avg Loss:1.125722/990, Avg Q Value:0.036648/20 
+2017-04-18 21:03:32,807 - root - INFO - Epoch:0, Episode:2, Steps Left:90000/5000/100000, Reward:-153.000000, fps:741.088570, Exploration:0.982092, Collision:0.043000/215 , Avg Loss:0.764939/1000, Avg Q Value:0.036476/77 
+2017-04-18 21:03:45,010 - root - INFO - Nework Params: 
+2017-04-18 21:03:45,010 - root - INFO -    fc2_weight: <NDArray 64x128 @gpu(0)>
+2017-04-18 21:03:45,011 - root - INFO -    qvalue_weight: <NDArray 4x64 @gpu(0)>
+2017-04-18 21:03:45,011 - root - INFO -    fc1_weight: <NDArray 128x74 @gpu(0)>
+2017-04-18 21:03:45,011 - root - INFO -    dqn_action: <NDArray 32 @gpu(0)>
+2017-04-18 21:03:45,011 - root - INFO -    fc2_bias: <NDArray 64 @gpu(0)>
+2017-04-18 21:03:45,012 - root - INFO -    data: <NDArray 32x74 @gpu(0)>
+2017-04-18 21:03:45,012 - root - INFO -    dqn_target: <NDArray 32 @gpu(0)>
+2017-04-18 21:03:45,012 - root - INFO -    fc1_bias: <NDArray 128 @gpu(0)>
+2017-04-18 21:03:45,012 - root - INFO -    qvalue_bias: <NDArray 4 @gpu(0)>
+2017-04-18 21:03:45,012 - root - INFO - Nework Aux Params: 
+2017-04-18 21:03:45,013 - root - INFO - Optimizer Params: <class 'mxnet.optimizer.Adam'>
+2017-04-18 21:03:45,013 - root - INFO -    epsilon: 1e-08
+2017-04-18 21:03:45,013 - root - INFO -    beta2: 0.999
+2017-04-18 21:03:45,014 - root - INFO -    beta1: 0.9
+2017-04-18 21:03:45,014 - root - INFO -    rescale_grad: 1
+2017-04-18 21:03:45,014 - root - INFO -    wd: 0.0
+2017-04-18 21:03:45,014 - root - INFO -    lr: 0.0002
+2017-04-18 21:03:47,579 - root - INFO - Nework Params: 
+2017-04-18 21:03:47,579 - root - INFO -    fc2_weight: <NDArray 64x128 @gpu(0)>
+2017-04-18 21:03:47,579 - root - INFO -    qvalue_weight: <NDArray 4x64 @gpu(0)>
+2017-04-18 21:03:47,579 - root - INFO -    fc1_weight: <NDArray 128x74 @gpu(0)>
+2017-04-18 21:03:47,579 - root - INFO -    dqn_action: <NDArray 32 @gpu(0)>
+2017-04-18 21:03:47,579 - root - INFO -    fc2_bias: <NDArray 64 @gpu(0)>
+2017-04-18 21:03:47,579 - root - INFO -    data: <NDArray 32x74 @gpu(0)>
+2017-04-18 21:03:47,579 - root - INFO -    dqn_target: <NDArray 32 @gpu(0)>
+2017-04-18 21:03:47,579 - root - INFO -    fc1_bias: <NDArray 128 @gpu(0)>
+2017-04-18 21:03:47,579 - root - INFO -    qvalue_bias: <NDArray 4 @gpu(0)>
+2017-04-18 21:03:47,579 - root - INFO - Nework Aux Params: 
+2017-04-18 21:03:47,579 - root - INFO - Optimizer Params: <class 'mxnet.optimizer.Adam'>
+2017-04-18 21:03:47,579 - root - INFO -    epsilon: 1e-08
+2017-04-18 21:03:47,579 - root - INFO -    beta2: 0.999
+2017-04-18 21:03:47,580 - root - INFO -    beta1: 0.9
+2017-04-18 21:03:47,580 - root - INFO -    rescale_grad: 1
+2017-04-18 21:03:47,580 - root - INFO -    wd: 0.0
+2017-04-18 21:03:47,580 - root - INFO -    lr: 0.0002
+2017-04-18 21:03:50,538 - root - INFO - Epoch:0, Episode:1, Steps Left:95000/5000/100000, Reward:-184.000000, fps:1689.885667, Exploration:1.000000, Collision:0.043800/219 
+2017-04-18 21:03:53,396 - root - INFO - Epoch:0, Episode:2, Steps Left:90000/5000/100000, Reward:-173.000000, fps:1749.676559, Exploration:1.000000, Collision:0.037600/188 
+2017-04-18 21:03:56,250 - root - INFO - Epoch:0, Episode:3, Steps Left:85000/5000/100000, Reward:-146.000000, fps:1751.970678, Exploration:1.000000, Collision:0.038200/191 
+2017-04-18 21:03:59,151 - root - INFO - Epoch:0, Episode:4, Steps Left:80000/5000/100000, Reward:-162.000000, fps:1724.168209, Exploration:1.000000, Collision:0.043000/215 
+2017-04-18 21:04:02,001 - root - INFO - Epoch:0, Episode:5, Steps Left:75000/5000/100000, Reward:-152.000000, fps:1754.422275, Exploration:1.000000, Collision:0.041600/208 
+2017-04-18 21:04:04,960 - root - INFO - Epoch:0, Episode:6, Steps Left:70000/5000/100000, Reward:-141.000000, fps:1689.454524, Exploration:1.000000, Collision:0.042000/210 
+2017-04-18 21:04:07,868 - root - INFO - Epoch:0, Episode:7, Steps Left:65000/5000/100000, Reward:-193.000000, fps:1719.406619, Exploration:1.000000, Collision:0.047200/236 
+2017-04-18 21:04:10,736 - root - INFO - Epoch:0, Episode:8, Steps Left:60000/5000/100000, Reward:-150.000000, fps:1743.744800, Exploration:1.000000, Collision:0.040000/200 
+2017-04-18 21:04:13,591 - root - INFO - Epoch:0, Episode:9, Steps Left:55000/5000/100000, Reward:-144.000000, fps:1751.320201, Exploration:1.000000, Collision:0.041800/209 
+2017-04-18 21:04:16,479 - root - INFO - Epoch:0, Episode:10, Steps Left:50000/5000/100000, Reward:-172.000000, fps:1731.228756, Exploration:1.000000, Collision:0.044600/223 
+2017-04-18 21:04:23,649 - root - INFO - Epoch:0, Episode:11, Steps Left:45000/5000/100000, Reward:-145.000000, fps:697.379629, Exploration:0.991002, Collision:0.039600/198 , Avg Loss:0.877933/1000, Avg Q Value:0.026427/18 
+2017-04-18 21:04:30,972 - root - INFO - Epoch:0, Episode:12, Steps Left:40000/5000/100000, Reward:-167.000000, fps:682.868682, Exploration:0.982002, Collision:0.043000/215 , Avg Loss:0.930477/1000, Avg Q Value:0.017865/66 
+2017-04-18 21:04:38,357 - root - INFO - Epoch:0, Episode:13, Steps Left:35000/5000/100000, Reward:-149.000000, fps:677.025886, Exploration:0.973002, Collision:0.041000/205 , Avg Loss:1.071006/1000, Avg Q Value:0.015720/102 
+2017-04-18 21:04:45,634 - root - INFO - Epoch:0, Episode:14, Steps Left:30000/5000/100000, Reward:-104.000000, fps:687.128236, Exploration:0.964002, Collision:0.037800/189 , Avg Loss:0.880065/1000, Avg Q Value:0.011075/140 
+2017-04-18 21:04:52,900 - root - INFO - Epoch:0, Episode:15, Steps Left:25000/5000/100000, Reward:-136.000000, fps:688.104710, Exploration:0.955002, Collision:0.039800/199 , Avg Loss:1.035478/1000, Avg Q Value:0.002020/203 
+2017-04-18 21:05:00,100 - root - INFO - Epoch:0, Episode:16, Steps Left:20000/5000/100000, Reward:-129.000000, fps:694.521898, Exploration:0.946002, Collision:0.036800/184 , Avg Loss:1.013940/1000, Avg Q Value:-0.002400/251 
+2017-04-18 21:05:07,138 - root - INFO - Epoch:0, Episode:17, Steps Left:15000/5000/100000, Reward:-172.000000, fps:710.372898, Exploration:0.937002, Collision:0.042000/210 , Avg Loss:1.021948/1000, Avg Q Value:-0.012439/304 
+2017-04-18 21:05:14,609 - root - INFO - Epoch:0, Episode:18, Steps Left:10000/5000/100000, Reward:-160.000000, fps:669.326031, Exploration:0.928002, Collision:0.041200/206 , Avg Loss:1.184487/1000, Avg Q Value:-0.014953/339 
+2017-04-18 21:05:21,983 - root - INFO - Epoch:0, Episode:19, Steps Left:5000/5000/100000, Reward:-127.000000, fps:678.035060, Exploration:0.919002, Collision:0.041600/208 , Avg Loss:0.925555/1000, Avg Q Value:-0.024593/358 
+2017-04-18 21:05:29,379 - root - INFO - Epoch:0, Episode:20, Steps Left:0/5000/100000, Reward:-162.000000, fps:676.071187, Exploration:0.910002, Collision:0.043600/218 , Avg Loss:0.981232/1000, Avg Q Value:-0.027492/439 
+2017-04-18 21:05:29,380 - root - INFO - Epoch:0, FPS:982.323538, Avg Reward: -153.400000/20
+2017-04-18 21:05:36,428 - root - INFO - Epoch:1, Episode:1, Steps Left:95000/5000/100000, Reward:-175.000000, fps:709.396361, Exploration:0.901002, Collision:0.045200/226 , Avg Loss:0.984387/1000, Avg Q Value:-0.036707/454 
+2017-04-18 21:05:44,429 - root - INFO - Epoch:1, Episode:2, Steps Left:90000/5000/100000, Reward:-154.000000, fps:624.982659, Exploration:0.892002, Collision:0.046400/232 , Avg Loss:1.100633/1000, Avg Q Value:-0.033600/537 
+2017-04-18 21:05:52,067 - root - INFO - Epoch:1, Episode:3, Steps Left:85000/5000/100000, Reward:-167.000000, fps:654.611595, Exploration:0.883002, Collision:0.042000/210 , Avg Loss:1.194685/1000, Avg Q Value:-0.052405/589 
+2017-04-18 21:05:59,585 - root - INFO - Epoch:1, Episode:4, Steps Left:80000/5000/100000, Reward:-116.000000, fps:665.100754, Exploration:0.874002, Collision:0.036400/182 , Avg Loss:0.884839/1000, Avg Q Value:-0.049712/647 
+2017-04-18 21:06:07,157 - root - INFO - Epoch:1, Episode:5, Steps Left:75000/5000/100000, Reward:-131.000000, fps:660.310430, Exploration:0.865002, Collision:0.041000/205 , Avg Loss:0.753729/1000, Avg Q Value:-0.054254/614 
+2017-04-18 21:06:14,470 - root - INFO - Epoch:1, Episode:6, Steps Left:70000/5000/100000, Reward:-138.000000, fps:683.746372, Exploration:0.856002, Collision:0.042400/212 , Avg Loss:1.043059/1000, Avg Q Value:-0.057031/719 
+2017-04-18 21:06:22,039 - root - INFO - Epoch:1, Episode:7, Steps Left:65000/5000/100000, Reward:-121.000000, fps:660.554518, Exploration:0.847002, Collision:0.039800/199 , Avg Loss:1.093832/1000, Avg Q Value:-0.052150/749 
+2017-04-18 21:06:30,019 - root - INFO - Epoch:1, Episode:8, Steps Left:60000/5000/100000, Reward:-145.000000, fps:626.624302, Exploration:0.838002, Collision:0.040400/202 , Avg Loss:1.074297/1000, Avg Q Value:-0.045461/739 
+2017-04-18 21:06:38,364 - root - INFO - Epoch:1, Episode:9, Steps Left:55000/5000/100000, Reward:-142.000000, fps:599.139416, Exploration:0.829002, Collision:0.042200/211 , Avg Loss:0.947158/1000, Avg Q Value:-0.042744/801 
+2017-04-18 21:06:45,906 - root - INFO - Epoch:1, Episode:10, Steps Left:50000/5000/100000, Reward:-173.000000, fps:662.961077, Exploration:0.820002, Collision:0.046400/232 , Avg Loss:0.813688/1000, Avg Q Value:-0.054676/850 
+2017-04-18 21:06:53,481 - root - INFO - Epoch:1, Episode:11, Steps Left:45000/5000/100000, Reward:-139.000000, fps:660.121602, Exploration:0.811002, Collision:0.041400/207 , Avg Loss:0.867392/1000, Avg Q Value:-0.052260/964 
+2017-04-18 21:07:00,991 - root - INFO - Epoch:1, Episode:12, Steps Left:40000/5000/100000, Reward:-138.000000, fps:665.771142, Exploration:0.802002, Collision:0.041400/207 , Avg Loss:1.069022/1000, Avg Q Value:-0.057447/931 
+2017-04-18 21:07:08,541 - root - INFO - Epoch:1, Episode:13, Steps Left:35000/5000/100000, Reward:-139.000000, fps:662.314112, Exploration:0.793002, Collision:0.041600/208 , Avg Loss:0.999528/1000, Avg Q Value:-0.051644/1011 
+2017-04-18 21:07:16,719 - root - INFO - Epoch:1, Episode:14, Steps Left:30000/5000/100000, Reward:-152.000000, fps:611.386040, Exploration:0.784002, Collision:0.043000/215 , Avg Loss:0.752682/1000, Avg Q Value:-0.050893/1073 
+2017-04-18 21:07:24,599 - root - INFO - Epoch:1, Episode:15, Steps Left:25000/5000/100000, Reward:-202.000000, fps:634.491265, Exploration:0.775002, Collision:0.050000/250 , Avg Loss:0.888453/1000, Avg Q Value:-0.050922/1142 
+2017-04-18 21:07:32,426 - root - INFO - Epoch:1, Episode:16, Steps Left:20000/5000/100000, Reward:-188.000000, fps:638.836883, Exploration:0.766002, Collision:0.045400/227 , Avg Loss:0.716322/1000, Avg Q Value:-0.049374/1169 
+2017-04-18 21:07:39,957 - root - INFO - Epoch:1, Episode:17, Steps Left:15000/5000/100000, Reward:-169.000000, fps:663.950755, Exploration:0.757002, Collision:0.048600/243 , Avg Loss:0.820225/1000, Avg Q Value:-0.051448/1189 
+2017-04-18 21:07:47,909 - root - INFO - Epoch:1, Episode:18, Steps Left:10000/5000/100000, Reward:-126.000000, fps:628.774698, Exploration:0.748002, Collision:0.046600/233 , Avg Loss:1.018681/1000, Avg Q Value:-0.056797/1206 
+2017-04-18 21:07:55,865 - root - INFO - Epoch:1, Episode:19, Steps Left:5000/5000/100000, Reward:-151.000000, fps:628.461099, Exploration:0.739002, Collision:0.043800/219 , Avg Loss:1.022577/1000, Avg Q Value:-0.055333/1267 
+2017-04-18 21:08:04,049 - root - INFO - Epoch:1, Episode:20, Steps Left:0/5000/100000, Reward:-201.000000, fps:610.959083, Exploration:0.730002, Collision:0.052000/260 , Avg Loss:1.032329/1000, Avg Q Value:-0.058576/1340 
+2017-04-18 21:08:04,051 - root - INFO - Epoch:1, FPS:646.539500, Avg Reward: -153.350000/20
+2017-04-18 21:08:12,174 - root - INFO - Epoch:2, Episode:1, Steps Left:95000/5000/100000, Reward:-202.000000, fps:615.492114, Exploration:0.721002, Collision:0.052400/262 , Avg Loss:0.926322/1000, Avg Q Value:-0.057784/1306 
+2017-04-18 21:08:20,148 - root - INFO - Epoch:2, Episode:2, Steps Left:90000/5000/100000, Reward:-168.000000, fps:627.118090, Exploration:0.712002, Collision:0.045200/226 , Avg Loss:1.032682/1000, Avg Q Value:-0.053046/1401 
+2017-04-18 21:08:28,384 - root - INFO - Epoch:2, Episode:3, Steps Left:85000/5000/100000, Reward:-179.000000, fps:607.055599, Exploration:0.703002, Collision:0.049600/248 , Avg Loss:0.945663/1000, Avg Q Value:-0.071298/1442 
+2017-04-18 21:08:36,553 - root - INFO - Epoch:2, Episode:4, Steps Left:80000/5000/100000, Reward:-155.000000, fps:612.125160, Exploration:0.694002, Collision:0.047000/235 , Avg Loss:0.953126/1000, Avg Q Value:-0.060627/1517 
+2017-04-18 21:08:44,517 - root - INFO - Epoch:2, Episode:5, Steps Left:75000/5000/100000, Reward:-131.000000, fps:627.772085, Exploration:0.685002, Collision:0.043000/215 , Avg Loss:0.934409/1000, Avg Q Value:-0.066087/1546 
+2017-04-18 21:08:52,523 - root - INFO - Epoch:2, Episode:6, Steps Left:70000/5000/100000, Reward:-191.000000, fps:624.574973, Exploration:0.676002, Collision:0.050000/250 , Avg Loss:0.876824/1000, Avg Q Value:-0.059638/1590 
+2017-04-18 21:09:00,997 - root - INFO - Epoch:2, Episode:7, Steps Left:65000/5000/100000, Reward:-183.000000, fps:590.030380, Exploration:0.667002, Collision:0.052800/264 , Avg Loss:0.829058/1000, Avg Q Value:-0.066875/1638 
