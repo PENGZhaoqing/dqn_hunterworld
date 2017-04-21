@@ -230,7 +230,7 @@ class HunterWorld(PyGameWrapper):
                         hunters[idx].accelerate = True
 
     # @profile
-    def step(self, dt, frame_skip, draw):
+    def step(self, actions, dt, frame_skip, draw):
 
         self.reward[:] = 0.0
         self.hungrey += self.rewards["tick"]
@@ -240,7 +240,29 @@ class HunterWorld(PyGameWrapper):
 
         dt /= 1000.0
         # self.screen.fill(self.BG_COLOR)
-        self._handle_player_events(self.HUNTERS)
+        # self._handle_player_events(self.HUNTERS)
+        hunters = self.HUNTERS
+        for key in actions:
+            for idx, actions in self.actions.iteritems():
+                if key == actions["left"]:
+                    hunters[idx].dx = -hunters[idx].speed
+                    hunters[idx].dy = 0
+                    hunters[idx].accelerate = True
+
+                if key == actions["right"]:
+                    hunters[idx].dx = hunters[idx].speed
+                    hunters[idx].dy = 0
+                    hunters[idx].accelerate = True
+
+                if key == actions["up"]:
+                    hunters[idx].dy = -hunters[idx].speed
+                    hunters[idx].dx = 0
+                    hunters[idx].accelerate = True
+
+                if key == actions["down"]:
+                    hunters[idx].dy = hunters[idx].speed
+                    hunters[idx].dx = 0
+                    hunters[idx].accelerate = True
 
         for prey in self.preys:
             count = 0

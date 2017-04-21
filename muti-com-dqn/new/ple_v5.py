@@ -37,7 +37,7 @@ class PLE(object):
             else:
                 self.rng = np.random.RandomState(rng)
 
-            # pygame.display.set_mode((1, 1), pygame.NOFRAME)
+                # pygame.display.set_mode((1, 1), pygame.NOFRAME)
 
         self.game.setRNG(self.rng)
         self.init()
@@ -102,7 +102,7 @@ class PLE(object):
         if self.game_over():
             return np.zeros(self.game.reward.size)
 
-        self.game.set_actions(actions)
+        # self.game.set_actions(actions)
 
         reward = np.zeros(self.game.reward.size)
         flag = True
@@ -110,7 +110,7 @@ class PLE(object):
             time_elapsed = self._tick()
             if i == self.num_steps - 1:
                 flag = False
-            reward += self.game.step(time_elapsed, frame_skip=flag, draw=self.display_screen)
+            reward += self.game.step(actions, time_elapsed, frame_skip=flag, draw=self.display_screen)
             self._draw_frame()
 
         ob = self.get_states()

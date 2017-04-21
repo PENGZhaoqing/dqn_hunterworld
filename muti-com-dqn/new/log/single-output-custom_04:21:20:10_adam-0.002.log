@@ -1,0 +1,39 @@
+2017-04-21 20:10:03,944 - root - INFO - Nework Params: 
+2017-04-21 20:10:03,944 - root - INFO -    qvalue_weight: <NDArray 4x74 @gpu(0)>
+2017-04-21 20:10:03,944 - root - INFO -    fc2_weight: <NDArray 64x128 @gpu(0)>
+2017-04-21 20:10:03,944 - root - INFO -    fc1_weight: <NDArray 128x74 @gpu(0)>
+2017-04-21 20:10:03,944 - root - INFO -    data: <NDArray 32x74 @gpu(0)>
+2017-04-21 20:10:03,944 - root - INFO -    dqn_action: <NDArray 32 @gpu(0)>
+2017-04-21 20:10:03,944 - root - INFO -    fc2_bias: <NDArray 64 @gpu(0)>
+2017-04-21 20:10:03,944 - root - INFO -    com: <NDArray 32x10 @gpu(0)>
+2017-04-21 20:10:03,944 - root - INFO -    dqn_target: <NDArray 32 @gpu(0)>
+2017-04-21 20:10:03,944 - root - INFO -    fc1_bias: <NDArray 128 @gpu(0)>
+2017-04-21 20:10:03,944 - root - INFO -    qvalue_bias: <NDArray 4 @gpu(0)>
+2017-04-21 20:10:03,944 - root - INFO - Nework Aux Params: 
+2017-04-21 20:10:03,944 - root - INFO - Optimizer Params: <class 'mxnet.optimizer.Adam'>
+2017-04-21 20:10:03,944 - root - INFO -    epsilon: 1e-08
+2017-04-21 20:10:03,944 - root - INFO -    beta2: 0.999
+2017-04-21 20:10:03,944 - root - INFO -    beta1: 0.9
+2017-04-21 20:10:03,944 - root - INFO -    rescale_grad: 1
+2017-04-21 20:10:03,944 - root - INFO -    wd: 0.0
+2017-04-21 20:10:03,944 - root - INFO -    lr: 0.0002
+2017-04-21 20:10:03,945 - root - INFO - Nework Params: 
+2017-04-21 20:10:03,945 - root - INFO -    fc2_weight: <NDArray 64x128 @gpu(0)>
+2017-04-21 20:10:03,945 - root - INFO -    fc1_weight: <NDArray 128x74 @gpu(0)>
+2017-04-21 20:10:03,945 - root - INFO -    signal_bias: <NDArray 10 @gpu(0)>
+2017-04-21 20:10:03,945 - root - INFO -    signal_weight: <NDArray 10x64 @gpu(0)>
+2017-04-21 20:10:03,945 - root - INFO -    fc2_bias: <NDArray 64 @gpu(0)>
+2017-04-21 20:10:03,945 - root - INFO -    data: <NDArray 32x74 @gpu(0)>
+2017-04-21 20:10:03,945 - root - INFO -    fc1_bias: <NDArray 128 @gpu(0)>
+2017-04-21 20:10:03,945 - root - INFO - Nework Aux Params: 
+2017-04-21 20:10:03,945 - root - INFO - Optimizer Params: <class 'mxnet.optimizer.Adam'>
+2017-04-21 20:10:03,945 - root - INFO -    epsilon: 1e-08
+2017-04-21 20:10:03,945 - root - INFO -    beta2: 0.999
+2017-04-21 20:10:03,945 - root - INFO -    beta1: 0.9
+2017-04-21 20:10:03,945 - root - INFO -    rescale_grad: 1
+2017-04-21 20:10:03,945 - root - INFO -    wd: 0.0
+2017-04-21 20:10:03,945 - root - INFO -    lr: 0.0002
+2017-04-21 20:10:05,901 - root - INFO - Epoch:0, Episode:1, Steps Left:95000/5000/100000, Reward:-245.000000, fps:2556.795267, Exploration:1.000000, Collision:0.059800/299 
+2017-04-21 20:10:07,789 - root - INFO - Epoch:0, Episode:2, Steps Left:90000/5000/100000, Reward:-227.000000, fps:2648.678011, Exploration:1.000000, Collision:0.057600/288 
+2017-04-21 20:10:09,672 - root - INFO - Epoch:0, Episode:3, Steps Left:85000/5000/100000, Reward:-198.000000, fps:2654.977678, Exploration:1.000000, Collision:0.054200/271 
+2017-04-21 20:10:11,613 - root - INFO - Epoch:0, Episode:4, Steps Left:80000/5000/100000, Reward:-242.000000, fps:2576.419327, Exploration:1.000000, Collision:0.058600/293 
