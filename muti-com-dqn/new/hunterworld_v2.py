@@ -239,7 +239,7 @@ class HunterWorld(PyGameWrapper):
             return self.reward
 
         dt /= 1000.0
-        self.screen.fill(self.BG_COLOR)
+        # self.screen.fill(self.BG_COLOR)
         self._handle_player_events(self.HUNTERS)
 
         for prey in self.preys:
@@ -287,9 +287,9 @@ class HunterWorld(PyGameWrapper):
                 if draw:
                     self.draw_line(hunter, ob)
 
-        self.hunters.draw(self.screen)
-        self.preys.draw(self.screen)
-        self.toxins.draw(self.screen)
+        # self.hunters.draw(self.screen)
+        # self.preys.draw(self.screen)
+        # self.toxins.draw(self.screen)
         return self.reward
 
     def draw_line(self, hunter, observation):

@@ -37,7 +37,7 @@ class PLE(object):
             else:
                 self.rng = np.random.RandomState(rng)
 
-            pygame.display.set_mode((1, 1), pygame.NOFRAME)
+            # pygame.display.set_mode((1, 1), pygame.NOFRAME)
 
         self.game.setRNG(self.rng)
         self.init()

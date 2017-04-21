@@ -35,7 +35,8 @@ class PyGameWrapper(object):
         Setups up the pygame env, the display and v3-v0.01 clock.
         """
         pygame.init()
-        self.screen = pygame.display.set_mode(self.get_screen_dims(), 0, 32)
+        # self.screen = pygame.display.set_mode(self.get_screen_dims(), 0, 32)
+        # self.screen=None
         self.clock = pygame.time.Clock()
 
     def set_actions(self, actions):

@@ -1,0 +1,47 @@
+2017-04-21 19:38:07,904 - root - INFO - Nework Params: 
+2017-04-21 19:38:07,905 - root - INFO -    qvalue_weight: <NDArray 4x74 @gpu(0)>
+2017-04-21 19:38:07,905 - root - INFO -    fc2_weight: <NDArray 64x128 @gpu(0)>
+2017-04-21 19:38:07,905 - root - INFO -    fc1_weight: <NDArray 128x74 @gpu(0)>
+2017-04-21 19:38:07,905 - root - INFO -    data: <NDArray 32x74 @gpu(0)>
+2017-04-21 19:38:07,905 - root - INFO -    dqn_action: <NDArray 32 @gpu(0)>
+2017-04-21 19:38:07,905 - root - INFO -    fc2_bias: <NDArray 64 @gpu(0)>
+2017-04-21 19:38:07,905 - root - INFO -    com: <NDArray 32x10 @gpu(0)>
+2017-04-21 19:38:07,905 - root - INFO -    dqn_target: <NDArray 32 @gpu(0)>
+2017-04-21 19:38:07,905 - root - INFO -    fc1_bias: <NDArray 128 @gpu(0)>
+2017-04-21 19:38:07,905 - root - INFO -    qvalue_bias: <NDArray 4 @gpu(0)>
+2017-04-21 19:38:07,905 - root - INFO - Nework Aux Params: 
+2017-04-21 19:38:07,905 - root - INFO - Optimizer Params: <class 'mxnet.optimizer.Adam'>
+2017-04-21 19:38:07,905 - root - INFO -    epsilon: 1e-08
+2017-04-21 19:38:07,905 - root - INFO -    beta2: 0.999
+2017-04-21 19:38:07,905 - root - INFO -    beta1: 0.9
+2017-04-21 19:38:07,905 - root - INFO -    rescale_grad: 1
+2017-04-21 19:38:07,905 - root - INFO -    wd: 0.0
+2017-04-21 19:38:07,905 - root - INFO -    lr: 0.0002
+2017-04-21 19:38:07,905 - root - INFO - Nework Params: 
+2017-04-21 19:38:07,905 - root - INFO -    fc2_weight: <NDArray 64x128 @gpu(0)>
+2017-04-21 19:38:07,905 - root - INFO -    fc1_weight: <NDArray 128x74 @gpu(0)>
+2017-04-21 19:38:07,905 - root - INFO -    signal_bias: <NDArray 10 @gpu(0)>
+2017-04-21 19:38:07,906 - root - INFO -    signal_weight: <NDArray 10x64 @gpu(0)>
+2017-04-21 19:38:07,906 - root - INFO -    fc2_bias: <NDArray 64 @gpu(0)>
+2017-04-21 19:38:07,906 - root - INFO -    data: <NDArray 32x74 @gpu(0)>
+2017-04-21 19:38:07,906 - root - INFO -    fc1_bias: <NDArray 128 @gpu(0)>
+2017-04-21 19:38:07,906 - root - INFO - Nework Aux Params: 
+2017-04-21 19:38:07,906 - root - INFO - Optimizer Params: <class 'mxnet.optimizer.Adam'>
+2017-04-21 19:38:07,906 - root - INFO -    epsilon: 1e-08
+2017-04-21 19:38:07,906 - root - INFO -    beta2: 0.999
+2017-04-21 19:38:07,906 - root - INFO -    beta1: 0.9
+2017-04-21 19:38:07,906 - root - INFO -    rescale_grad: 1
+2017-04-21 19:38:07,906 - root - INFO -    wd: 0.0
+2017-04-21 19:38:07,906 - root - INFO -    lr: 0.0002
+2017-04-21 19:38:09,781 - root - INFO - Epoch:0, Episode:1, Steps Left:95000/5000/100000, Reward:-187.000000, fps:2666.753475, Exploration:1.000000, Collision:0.043400/217 
+2017-04-21 19:38:11,713 - root - INFO - Epoch:0, Episode:2, Steps Left:90000/5000/100000, Reward:-137.000000, fps:2588.410906, Exploration:1.000000, Collision:0.041600/208 
+2017-04-21 19:38:13,609 - root - INFO - Epoch:0, Episode:3, Steps Left:85000/5000/100000, Reward:-190.000000, fps:2637.150163, Exploration:1.000000, Collision:0.043800/219 
+2017-04-21 19:38:15,526 - root - INFO - Epoch:0, Episode:4, Steps Left:80000/5000/100000, Reward:-156.000000, fps:2608.862673, Exploration:1.000000, Collision:0.040000/200 
+2017-04-21 19:38:17,402 - root - INFO - Epoch:0, Episode:5, Steps Left:75000/5000/100000, Reward:-153.000000, fps:2664.628973, Exploration:1.000000, Collision:0.041200/206 
+2017-04-21 19:38:19,307 - root - INFO - Epoch:0, Episode:6, Steps Left:70000/5000/100000, Reward:-152.000000, fps:2624.932473, Exploration:1.000000, Collision:0.040400/202 
+2017-04-21 19:38:21,241 - root - INFO - Epoch:0, Episode:7, Steps Left:65000/5000/100000, Reward:-135.000000, fps:2585.587915, Exploration:1.000000, Collision:0.038600/193 
+2017-04-21 19:38:23,182 - root - INFO - Epoch:0, Episode:8, Steps Left:60000/5000/100000, Reward:-155.000000, fps:2576.206642, Exploration:1.000000, Collision:0.042200/211 
+2017-04-21 19:38:25,140 - root - INFO - Epoch:0, Episode:9, Steps Left:55000/5000/100000, Reward:-138.000000, fps:2553.463296, Exploration:1.000000, Collision:0.036400/182 
+2017-04-21 19:38:27,052 - root - INFO - Epoch:0, Episode:10, Steps Left:50000/5000/100000, Reward:-89.000000, fps:2615.826436, Exploration:1.000000, Collision:0.036400/182 
+2017-04-21 19:38:33,392 - root - INFO - Epoch:0, Episode:11, Steps Left:45000/5000/100000, Reward:-152.000000, fps:788.711079, Exploration:0.995501, Collision:0.039200/196 , Avg Loss:0.750912/1000, Avg Q Value:0.057883/8 
+2017-04-21 19:38:39,934 - root - INFO - Epoch:0, Episode:12, Steps Left:40000/5000/100000, Reward:-141.000000, fps:764.293540, Exploration:0.991001, Collision:0.038400/192 , Avg Loss:0.624129/1000, Avg Q Value:0.065313/39 

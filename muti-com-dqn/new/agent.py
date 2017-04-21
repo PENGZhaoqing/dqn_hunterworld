@@ -58,7 +58,7 @@ class Prey(Agent):
             radius,
             0
         )
-        self.image = image.convert()
+        self.image = image
         self.rect = self.image.get_rect()
 
     def update(self, dt):
@@ -98,7 +98,7 @@ class Toxin(Agent):
             radius,
             0
         )
-        self.image = image.convert()
+        self.image = image
         self.rect = self.image.get_rect()
 
     def update(self, dt):
@@ -154,7 +154,7 @@ class Hunter(Agent):
         self.dx = 0
         self.dy = 0
         self.accelerate = True
-        self.image = image.convert()
+        self.image = image
         self.rect = self.image.get_rect()
 
     def update(self, dt):
