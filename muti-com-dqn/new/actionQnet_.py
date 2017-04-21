@@ -151,7 +151,7 @@ class comNet():
         init = mx.init.Xavier(factor_type="in", magnitude=2.34)
         for name, arr in self.arg_dict.items():
             if name not in self.input_shapes:
-                init(mx.init.InitDesc(name), arr)
+                init(name, arr)
 
         self.updater = mx.optimizer.get_updater(
             mx.optimizer.create('adam', learning_rate=0.0002))
