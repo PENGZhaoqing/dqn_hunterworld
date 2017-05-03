@@ -40,12 +40,14 @@ if __name__ == '__main__':
     config = Config(args)
     np.random.seed(args.seed)
 
-    if not os.path.exists('Qnet'):
-        os.makedirs('Qnet')
-    if not os.path.exists('policy1'):
-        os.makedirs('policy1')
-    if not os.path.exists('policy2'):
-        os.makedirs('policy2')
+    if not os.path.exists('a1_A3c'):
+        os.makedirs('a1_A3c')
+    if not os.path.exists('a2_A3c'):
+        os.makedirs('a2_A3c')
+    if not os.path.exists('a1_comNet'):
+        os.makedirs('a1_comNet')
+    if not os.path.exists('a2_comNet'):
+        os.makedirs('a2_comNet')
 
     testing = False
     if testing:
@@ -69,19 +71,19 @@ if __name__ == '__main__':
                   resized_rows=80, resized_cols=80, num_steps=3)
         envs.append(env)
 
-    Qnet_file = None
-    a1_pnet = None
-    a2_pnet = None
+    a1_A3c_file = None
+    a2_A3c_file = None
+    a1_comNet_file = None
+    a2_comNet_file = None
     if testing:
         envs[0].force_fps = False
         envs[0].game.draw = True
         envs[0].display_screen = True
         replay_start_size = 32
-        a1_A3c_file = 'Qnet/network-dqn_mx0012.params'
-        a1_A3c_file = 'Qnet/network-dqn_mx0012.params'
-
-        a1_comNet = 'policy1/network-dqn_mx0012.params'
-        a2_pnet = 'policy2/network-dqn_mx0012.params'
+        a1_A3c_file = 'a1_A3c/network-dqn_mx0012.params'
+        a2_A3c_file = 'a2_A3c/network-dqn_mx0012.params'
+        a1_comNet_file = 'a1_comNet/network-dqn_mx0012.params'
+        a2_comNet_file = 'a2_comNet/network-dqn_mx0012.params'
 
     action_set = envs[0].get_action_set()
     action_map = []
@@ -94,10 +96,6 @@ if __name__ == '__main__':
     for action in action_set[1].values():
         action_map2.append(action)
 
-    action_map3 = []
-    for action in action_set[2].values():
-        action_map3.append(action)
-
     action_num = 4
     a1_A3c = A3c(state_dim=74, signal_num=4, act_space=action_num, config=config)
     a2_A3c = A3c(state_dim=74, signal_num=4, act_space=action_num, config=config)
@@ -105,16 +103,16 @@ if __name__ == '__main__':
     a1_comNet = ComNet(state_dim=74, signal_num=4, config=config)
     a2_comNet = ComNet(state_dim=74, signal_num=4, config=config)
 
-    if Qnet_file is not None:
-        a1_A3c.model.load_params(Qnet_file)
-        a2_A3c.model.load_params(Qnet_file)
-        a1_comNet.model.load_params(Qnet_file)
-        a2_comNet.model.load_params(Qnet_file)
+    if a1_A3c_file is not None:
+        a1_A3c.model.load_params(a1_A3c_file)
+        a2_A3c.model.load_params(a2_A3c_file)
+        a1_comNet.model.load_params(a1_comNet_file)
+        a2_comNet.model.load_params(a2_comNet_file)
 
     logging.info('args=%s' % args)
     logging.info('config=%s' % config.__dict__)
-    print_params(Qnet.model)
-    print_params(a1_policy.model)
+    print_params(a1_A3c.model)
+    print_params(a1_comNet.model)
 
     running_reward = None
     t_max = args.t_max
@@ -151,26 +149,11 @@ if __name__ == '__main__':
 
             while not all_done:
 
-                data_batch1 = mx.io.DataBatch(data=[mx.nd.array(step_ob[:, :74], ctx=q_ctx)], label=None)
-                data_batch2 = mx.io.DataBatch(data=[mx.nd.array(step_ob[:, -74:], ctx=q_ctx)], label=None)
+                signal1 = a1_comNet.model.forward(step_ob[:, :74], is_train=False)
+                signal2 = a2_comNet.model.forward(step_ob[:, -74:], is_train=False)
 
-                a1_policy.model.reshape([('data', (num_envs, 74))])
-                a2_policy.model.reshape([('data', (num_envs, 74))])
-                Qnet.model.reshape([('data', (num_envs, 156))])
-
-                a1_policy.model.forward(data_batch1, is_train=False)
-                a2_policy.model.forward(data_batch2, is_train=False)
-
-                step_policy1 = a1_policy.model.get_outputs()[2].asnumpy()
-                step_policy2 = a2_policy.model.get_outputs()[2].asnumpy()
-
-                data_batch = np.append(step_ob, step_policy1, axis=1)
-                data_batch = np.append(data_batch, step_policy2, axis=1)
-
-                Qnet.model.forward(mx.io.DataBatch(data=[mx.nd.array(data_batch, ctx=q_ctx)], label=None),
-                                   is_train=False)
-
-                step_value = Qnet.model.get_outputs()[0].asnumpy()
+                _, step_value1, _, step_policy1 = a1_A3c.model.forward(step_ob[:, :74], is_train=False)
+                _, step_value2, _, step_policy2 = a2_A3c.model.forward(step_ob[:, -74:], is_train=False)
 
                 us1 = np.random.uniform(size=step_policy1.shape[0])[:, np.newaxis]
                 step_action1 = (np.cumsum(step_policy1, axis=1) > us1).argmax(axis=1)
@@ -184,60 +167,59 @@ if __name__ == '__main__':
                             [action_map1[step_action1[i]], action_map2[step_action2[i]]])
                         env_ob[i].append(step_ob[i])
                         env_action[i].append([step_action1[i], step_action2[i]])
-                        env_value[i].append(step_value[i][0])
+                        env_value[i].append([step_value1[i][0], step_value2[i][0]])
                         env_reward[i].append(reward)
                         episode_reward[i] += reward[0]
                         if reward[0] < 0:
                             collisions[i] += 1
                         episode_step += 1
-                        if done[i]:
-                            env_value[i].append(0.0)
-                        else:
-                            step_ob[i] = next_ob
+                        step_ob[i] = next_ob
 
                 if t == t_max:
 
                     data_batch1 = mx.io.DataBatch(data=[mx.nd.array(step_ob[:, :74], ctx=q_ctx)], label=None)
                     data_batch2 = mx.io.DataBatch(data=[mx.nd.array(step_ob[:, -74:], ctx=q_ctx)], label=None)
 
-                    a1_policy.model.forward(data_batch1, is_train=False)
-                    a2_policy.model.forward(data_batch2, is_train=False)
+                    a1_comNet.model.forward(data_batch1, is_train=False)
+                    a2_comNet.model.forward(data_batch2, is_train=False)
 
-                    step_policy1 = a1_policy.model.get_outputs()[2].asnumpy()
-                    step_policy2 = a2_policy.model.get_outputs()[2].asnumpy()
+                    signal1 = a1_comNet.model.get_outputs()[0]
+                    signal2 = a2_comNet.model.get_outputs()[0]
 
-                    data_batch = np.append(step_ob, step_policy1, axis=1)
-                    data_batch = np.append(data_batch, step_policy2, axis=1)
+                    data_batch1 = mx.io.DataBatch(
+                        data=[mx.nd.array(step_ob[:, :74], ctx=q_ctx), mx.nd.array(signal1, ctx=q_ctx)],
+                        label=None)
+                    data_batch2 = mx.io.DataBatch(
+                        data=[mx.nd.array(step_ob[:, -74:], ctx=q_ctx), mx.nd.array(signal2, ctx=q_ctx)],
+                        label=None)
 
-                    Qnet.model.forward(mx.io.DataBatch(data=[mx.nd.array(data_batch, ctx=q_ctx)], label=None),
-                                       is_train=False)
+                    a1_A3c.model.forward(data_batch1, is_train=False)
+                    a2_A3c.model.forward(data_batch2, is_train=False)
 
-                    extra_value = Qnet.model.get_outputs()[0].asnumpy()
+                    extra_value1 = a1_A3c.model.get_outputs()[1].asnumpy()
+                    extra_value2 = a2_A3c.model.get_outputs()[1].asnumpy()
 
                     for i in range(num_envs):
                         if not done[i]:
-                            env_value[i].append(extra_value[i][0])
+                            env_value[i].append([extra_value1[i][0], extra_value2[i][1]])
+                        else:
+                            env_value[i].append([0.0, 0.0])
 
-                    advs_Q = []
                     advs_p1 = []
                     advs_p2 = []
                     for i in xrange(len(env_value)):
-                        R = R1 = R2 = env_value[i][-1]
-                        tmp_R = []
+                        R1 = env_value[i][-1][0]
+                        R1 = env_value[i][-1][1]
                         tmp_R1 = []
                         tmp_R2 = []
                         for j in range(len(env_reward[i]))[::-1]:
-                            R = sum(env_reward[i][j]) + gamma * R
                             R1 = env_reward[i][j][0] + gamma * R1
                             R2 = env_reward[i][j][1] + gamma * R2
-                            tmp_R.append(R - env_value[i][j])
-                            tmp_R1.append(R1 - env_value[i][j])
-                            tmp_R2.append(R2 - env_value[i][j])
-                        advs_Q.extend(tmp_R[::-1])
+                            tmp_R1.append(R1 - env_value[i][j][0])
+                            tmp_R2.append(R2 - env_value[i][j][1])
                         advs_p1.extend(tmp_R1[::-1])
                         advs_p2.extend(tmp_R2[::-1])
 
-                    neg_advs_v = -np.asarray(advs_Q)
                     neg_advs_v1 = -np.asarray(advs_p1)
                     neg_advs_v2 = -np.asarray(advs_p2)
 
@@ -247,39 +229,51 @@ if __name__ == '__main__':
                                             q_ctx=q_ctx)
                     neg_advs2 = compute_adv(neg_advs_v=neg_advs_v2, action_num=action_num, action=env_action[:, :, 1],
                                             q_ctx=q_ctx)
-                    v_grads = mx.nd.array(0.5 * neg_advs_v[:, np.newaxis],
-                                          ctx=q_ctx)
+                    v_grads1 = mx.nd.array(0.5 * neg_advs_v1[:, np.newaxis],
+                                           ctx=q_ctx)
+                    v_grads2 = mx.nd.array(0.5 * neg_advs_v2[:, np.newaxis],
+                                           ctx=q_ctx)
 
                     env_ob = np.asarray(list(chain.from_iterable(env_ob)))
                     data_batch1 = mx.io.DataBatch(data=[mx.nd.array(env_ob[:, :74], ctx=q_ctx)], label=None)
                     data_batch2 = mx.io.DataBatch(data=[mx.nd.array(env_ob[:, -74:], ctx=q_ctx)], label=None)
 
-                    a1_policy.model.reshape([('data', (len(env_ob), 74))])
-                    a2_policy.model.reshape([('data', (len(env_ob), 74))])
-                    a1_policy.model.forward(data_batch1, is_train=True)
-                    a2_policy.model.forward(data_batch2, is_train=True)
-                    a1_policy.model.backward(out_grads=[neg_advs1])
-                    a2_policy.model.backward(out_grads=[neg_advs2])
-                    a1_policy.model.update()
-                    a2_policy.model.update()
+                    a1_comNet.model.reshape([('data', (len(env_ob), 74))])
+                    a2_comNet.model.reshape([('data', (len(env_ob), 74))])
 
-                    step_policy1 = a1_policy.model.get_outputs()[2].asnumpy()
-                    step_policy2 = a2_policy.model.get_outputs()[2].asnumpy()
+                    a1_comNet.model.forward(data_batch1, is_train=True)
+                    a2_comNet.model.forward(data_batch2, is_train=True)
 
-                    data_batch = np.append(env_ob, step_policy1, axis=1)
-                    data_batch = np.append(data_batch, step_policy2, axis=1)
+                    signal1 = a1_comNet.model.get_outputs()
+                    signal2 = a2_comNet.model.get_outputs()
 
-                    Qnet.model.reshape([('data', (len(env_ob), 156))])
-                    data_batch = mx.io.DataBatch(data=[mx.nd.array(data_batch, ctx=q_ctx)], label=None)
-                    Qnet.model.forward(data_batch, is_train=True)
-                    Qnet.model.backward(out_grads=[v_grads])
-                    Qnet.model.update()
+                    a1_A3c.model.reshape([('data', (len(env_ob), 78))])
+                    a2_A3c.model.reshape([('data', (len(env_ob), 78))])
+                    data_batch1 = mx.io.DataBatch(
+                        data=[mx.nd.array(env_ob[:, :74], ctx=q_ctx), mx.nd.array(signal1, ctx=q_ctx)],
+                        label=None)
+                    data_batch2 = mx.io.DataBatch(
+                        data=[mx.nd.array(env_ob[:, -74:], ctx=q_ctx), mx.nd.array(signal2, ctx=q_ctx)],
+                        label=None)
+
+                    a1_A3c.model.forward(data_batch1, is_train=True)
+                    a2_A3c.model.forward(data_batch2, is_train=True)
+
+                    a1_A3c.model.backward(out_grads=[v_grads1])
+                    a2_A3c.model.backward(out_grads=[v_grads2])
+                    a1_A3c.model.update()
+                    a2_A3c.model.update()
+
+                    a1_comNet.model.backward(out_grads=[a2_A3c.model.exe.grad_dict['signal'][:]])
+                    a2_comNet.model.backward(out_grads=[a1_A3c.model.exe.grad_dict['signal'][:]])
+                    a1_comNet.model.update()
+                    a2_comNet.model.update()
 
                     env_ob, env_action = _2d_list(num_envs), _2d_list(num_envs)
                     env_reward, env_value = _2d_list(num_envs), _2d_list(num_envs)
 
                     training_steps += 1
-                    episode_advs += np.mean(neg_advs_v)
+                    episode_advs += np.mean(neg_advs_v1)
 
                     t = 0
                 all_done = np.all(done)

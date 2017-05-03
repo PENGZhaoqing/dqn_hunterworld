@@ -52,6 +52,13 @@ class A3c(object):
             kvstore='local', optimizer=config.update_rule,
             optimizer_params=optimizer_params)
 
+    def forward(self, state, signal, is_train):
+        self.model.reshape([('state', state.shape), ('signal', signal.shape)])
+        data_batch = mx.io.DataBatch(
+            data=[mx.nd.array(state, ctx=self.config.ctx), mx.nd.array(signal, ctx=self.config.ctx)], label=None)
+        self.model.forward(data_batch, is_train=is_train)
+        return self.model.get_outputs()
+
 
 class ComNet(object):
     def __init__(self, state_dim, signal_num, config):
@@ -71,7 +78,7 @@ class ComNet(object):
 
         self.paralell_num = config.num_envs * config.t_max
         self.model.bind(
-            data_shapes=[('data', (self.paralell_num, state_dim))],
+            data_shapes=[('state', (self.paralell_num, state_dim))],
             label_shapes=None,
             grad_req="write")
 
@@ -85,6 +92,12 @@ class ComNet(object):
         self.model.init_optimizer(
             kvstore='local', optimizer=config.update_rule,
             optimizer_params=optimizer_params)
+
+    def forward(self, data, is_train):
+        self.model.reshape([('state', data.shape)])
+        data_batch = mx.io.DataBatch(data=[mx.nd.array(data, ctx=self.config.ctx)], label=None)
+        self.model.forward(data_batch, is_train=is_train)
+        return self.model.get_outputs()
 
 
 def compute_adv(action_num, action, neg_advs_v, q_ctx):
