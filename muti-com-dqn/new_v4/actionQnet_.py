@@ -21,6 +21,7 @@ class DQNOutput(mx.operator.CustomOp):
         modQ.assign(in_grad[0], req[0], ret)
         # sys.exit(0)
 
+
 @mx.operator.register("DQNOutput")
 class DQNOutputProp(mx.operator.CustomOpProp):
     def __init__(modQ):
@@ -77,7 +78,7 @@ class actQnet():
         self.updater = mx.optimizer.get_updater(
             mx.optimizer.create('adam', learning_rate=0.0002))
 
-    def update_params(self, state, signal, action, targets):
+    def forward_backward(self, state, signal, action, targets):
 
         self.arg_dict["data"][:] = state
         self.arg_dict["dqn_action"][:] = action
@@ -112,7 +113,7 @@ class target_actQnet():
     def getNet(self):
         return self.exe
 
-    def get_qvals(self, state, signal):
+    def forward_batch(self, state, signal):
         # batch version
         self.arg_dict["data"][:] = state
         self.arg_dict["com"][:] = signal
@@ -120,7 +121,7 @@ class target_actQnet():
         self.exe.forward(is_train=False)
         return self.exe.outputs[0]
 
-    def get_qval(self, state, signal):
+    def forward_one(self, state, signal):
         # single version
         self.arg_dict_one["data"][:] = state
         self.arg_dict_one["com"][:] = signal
@@ -133,15 +134,16 @@ class comNet():
     def __init__(self, signal_num, ctx):
         data = mx.symbol.Variable('data')
         data = mx.symbol.Flatten(data=data)
+        label = mx.symbol.Variable('label')
         fc1 = mx.symbol.FullyConnected(data=data, name='fc1', num_hidden=128)
         act1 = mx.symbol.Activation(data=fc1, name='relu1', act_type="relu")
         fc2 = mx.symbol.FullyConnected(data=act1, name='fc2', num_hidden=64)
         act2 = mx.symbol.Activation(data=fc2, name='relu2', act_type="relu")
-        signal = mx.symbol.FullyConnected(data=act2, name='signal', num_hidden=signal_num)
-        self.signal = mx.symbol.Activation(data=signal, name="act", act_type="tanh")
+        self.signal = mx.symbol.FullyConnected(data=act2, name='signal', num_hidden=signal_num)
+        signal = mx.symbol.SoftmaxOutput(data=self.signal, label=label, name="signal_output")
 
-        self.input_shapes = {"data": (32, 74)}
-        self.exe = self.signal.simple_bind(ctx=ctx, **self.input_shapes)
+        self.input_shapes = {"data": (32, 74), 'label': (32, signal_num)}
+        self.exe = signal.simple_bind(ctx=ctx, **self.input_shapes)
         self.arg_arrays = self.exe.arg_arrays
         self.grad_arrays = self.exe.grad_arrays
         self.arg_dict = self.exe.arg_dict
@@ -155,24 +157,23 @@ class comNet():
         self.updater = mx.optimizer.get_updater(
             mx.optimizer.create('adam', learning_rate=0.0002))
 
-    def update_params(self, grad_from_top):
+    def forward_backward(self, state, label):
+        # policy accepts the gradient from the Value network
+        self.exe.arg_dict['label'] = label
+        self.exe.arg_dict['data'][:] = state
         self.exe.forward(is_train=True)
-        self.exe.backward([grad_from_top])
+        self.exe.backward()
 
         for i, pair in enumerate(zip(self.arg_arrays, self.grad_arrays)):
             weight, grad = pair
             self.updater(i, grad, weight)
 
-    def get_signals(self, state):
-        self.exe.arg_dict['data'][:] = state
-        self.exe.forward(is_train=False)
-        return self.exe.outputs[0]
-
 
 class target_comNet():
     def __init__(self, comNet, ctx):
+        signal = mx.symbol.SoftmaxActivation(data=comNet.signal, name="target_output")
         self.target_shapes = {"data": (32, 74)}
-        self.exe = comNet.signal.simple_bind(ctx=ctx, **self.target_shapes)
+        self.exe = signal.simple_bind(ctx=ctx, **self.target_shapes)
         self.arg_dict = self.exe.arg_dict
 
         # parameters are not shared but initialized the same
@@ -183,13 +184,13 @@ class target_comNet():
         self.exe_one = self.exe.reshape(**new_input_shapes)
         self.arg_dict_one = self.exe_one.arg_dict
 
-    def get_singal(self, state):
+    def forward_one(self, state):
         # single version
         self.arg_dict_one["data"][:] = state
         self.exe_one.forward(is_train=False)
         return self.exe_one.outputs[0]
 
-    def get_singals(self, state):
+    def forward_batch(self, state):
         # batch version
         self.arg_dict["data"][:] = state
         self.exe.forward(is_train=False)

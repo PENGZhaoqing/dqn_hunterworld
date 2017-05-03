@@ -1,15 +1,17 @@
 import mxnet as mx
 import numpy
 
+
 class ReplayMemory(object):
     def __init__(self, history_length, memory_size=1000000, replay_start_size=100,
                  state_dim=(), action_dim=(), state_dtype='uint8', action_dtype='uint8',
-                 ctx=mx.gpu(), reward_dim=()):
+                 ctx=mx.gpu(), reward_dim=(), signal_dim=()):
         self.ctx = ctx
         assert type(action_dim) is tuple and type(state_dim) is tuple, \
             "Must set the dimensions of state and action for replay memory"
         self.state_dim = state_dim
         self.reward_dim = reward_dim
+        self.signal_dim = signal_dim
         if action_dim == (1,):
             self.action_dim = ()
         else:
@@ -17,6 +19,7 @@ class ReplayMemory(object):
         self.states = numpy.zeros((memory_size,) + state_dim, dtype=state_dtype)
         self.actions = numpy.zeros((memory_size,) + action_dim, dtype=action_dtype)
         self.rewards = numpy.zeros((memory_size,) + reward_dim, dtype='float32')
+        self.signals = numpy.zeros((memory_size,) + signal_dim, dtype='float32')
         self.terminate_flags = numpy.zeros(memory_size, dtype='bool')
         self.memory_size = memory_size
         self.replay_start_size = replay_start_size
@@ -101,3 +104,41 @@ class ReplayMemory(object):
             next_states[counter] = self.states.take(transition_indices, axis=0, mode='wrap')
             counter += 1
         return states, actions, rewards, next_states, terminate_flags
+
+    def append_signal(self, obs, signal, action, reward, terminate_flag):
+        self.states[self.top] = obs
+        self.actions[self.top] = action
+        self.rewards[self.top] = reward
+        self.signals[self.top] = signal
+        self.terminate_flags[self.top] = terminate_flag
+        self.top = (self.top + 1) % self.memory_size
+        if self.size < self.memory_size:
+            self.size += 1
+
+    def sample_one(self, batch_size):
+        assert self.replay_start_size >= self.history_length
+        assert (0 <= self.size <= self.memory_size)
+        assert (0 <= self.top <= self.memory_size)
+        states = numpy.zeros((batch_size,) + self.state_dim,
+                             dtype=self.states.dtype)
+        signals = numpy.zeros((batch_size,) + self.signal_dim,
+                              dtype=self.signals.dtype)
+        actions = numpy.zeros((batch_size,) + self.action_dim, dtype=self.actions.dtype)
+        rewards = numpy.zeros((batch_size,) + self.reward_dim, dtype='float16')
+        terminate_flags = numpy.zeros(batch_size, dtype='bool')
+        next_states = numpy.zeros((batch_size,) + self.state_dim,
+                                  dtype=self.states.dtype)
+        next_signals = numpy.zeros((batch_size,) + self.signal_dim,
+                                   dtype=self.signals.dtype)
+        counter = 0
+        while counter < batch_size:
+            index = numpy.random.randint(low=self.top - self.size + 1, high=self.top - self.history_length)
+            states[counter] = self.states[index]
+            signals[counter] = self.signals[index]
+            actions[counter] = self.actions[index]
+            rewards[counter] = self.rewards[index]
+            terminate_flags[counter] = self.terminate_flags[index]
+            next_states[counter] = self.states[index + 1]
+            next_signals[counter] = self.signals[index + 1]
+            counter += 1
+        return states, signals, actions, rewards, next_states, next_signals, terminate_flags

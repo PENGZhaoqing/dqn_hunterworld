@@ -21,6 +21,7 @@ class DQNOutput(mx.operator.CustomOp):
         modQ.assign(in_grad[0], req[0], ret)
         # sys.exit(0)
 
+
 @mx.operator.register("DQNOutput")
 class DQNOutputProp(mx.operator.CustomOpProp):
     def __init__(modQ):
@@ -156,12 +157,14 @@ class comNet():
             mx.optimizer.create('adam', learning_rate=0.0002))
 
     def update_params(self, grad_from_top):
+        # policy accepts the gradient from the Value network
         self.exe.forward(is_train=True)
         self.exe.backward([grad_from_top])
 
         for i, pair in enumerate(zip(self.arg_arrays, self.grad_arrays)):
             weight, grad = pair
             self.updater(i, grad, weight)
+
 
     def get_signals(self, state):
         self.exe.arg_dict['data'][:] = state

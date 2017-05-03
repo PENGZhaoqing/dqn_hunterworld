@@ -100,7 +100,6 @@ def main():
         action_matrix[i, i] = 1
 
     action_set = env.get_action_set()
-
     action_map1 = []
     for action in action_set[0].values():
         action_map1.append(action)
