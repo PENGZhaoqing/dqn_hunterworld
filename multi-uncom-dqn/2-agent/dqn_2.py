@@ -1,8 +1,8 @@
 import numpy as np
 from ANN_2 import createQNetwork, copyTargetQNetwork
 
-from env.ple_v5 import PLE
-from env.v9.hunterworld_v2 import HunterWorld
+from env.ple_v7 import PLE
+from env.v11.hunterworld_v2 import HunterWorld
 from replay_memory import ReplayMemory
 from utils import *
 
@@ -29,7 +29,7 @@ def main():
         "win": 2.0
     }
 
-    testing = False
+    testing = True
     training_continue = False
 
     ctx = parse_ctx('gpu')
@@ -63,12 +63,13 @@ def main():
 
     if testing:
         env.force_fps = False
+        env.game.draw = True
         env.display_screen = True
         replay_start_size = 32
         eps_start = 0.11
         epoch_start = 19
-        param_file1a = "saved_networks_agent1/network-dqn_mx0009.params"
-        param_file2a = "saved_networks_agent2/network-dqn_mx0009.params"
+        param_file1a = "saved_networks_agent1/network-dqn_mx0010.params"
+        param_file2a = "saved_networks_agent2/network-dqn_mx0010.params"
 
     if not testing:
         logging_config(folder_name="log", name="non_com_network_a2")
@@ -83,7 +84,7 @@ def main():
                                   memory_size=replay_memory_size,
                                   replay_start_size=replay_start_size, state_dtype='float16')
 
-    eps_decay = (eps_start - eps_min) / 1000000
+    eps_decay = (eps_start - eps_min) / 500000
     eps_curr = eps_start
     freeze_interval /= update_interval
     minibatch_size = 32

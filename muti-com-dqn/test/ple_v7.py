@@ -28,7 +28,7 @@ class PLE(object):
         self.frame_count = 0
         self.episode_step = 0
         self.episode_reward = 0
-
+        self.rng = 24
         if reward_values:
             self.game.adjustRewards(reward_values)
 
@@ -38,7 +38,7 @@ class PLE(object):
             else:
                 self.rng = np.random.RandomState(rng)
 
-            pygame.display.set_mode((1, 1), pygame.NOFRAME)
+            pygame.display.set_mode(self.game.get_screen_dims(), 0, 32)
 
         self.game.setRNG(self.rng)
         self.init()
@@ -49,7 +49,7 @@ class PLE(object):
 
     def init(self):
         self.game.setup()
-        self.reset_game()  # this is the games setup/init
+        self.game.init()
 
     def reset_game(self):
         self.episode_step = 0
@@ -98,10 +98,7 @@ class PLE(object):
     def get_states(self):
         return self.game.get_game_state()
 
-    def act_action(self, actions):
-
-        # if self.game_over():
-        #     return np.zeros(self.game.reward.size)
+    def act(self, actions):
 
         self.game.set_actions(actions)
 
@@ -118,9 +115,6 @@ class PLE(object):
         self.episode_step += 1
         self.episode_reward += reward
 
-        # print ob.shape
-        # print reward
-        # print terminal_flag
         return ob, reward, terminal_flag
 
     def _tick(self):

@@ -1,12 +1,11 @@
-from itertools import chain
 import mxnet as mx
-import numpy as np
 
 
 class A3c(object):
     def __init__(self, state_dim, signal_num, act_space, config):
         self.state_dim = state_dim
         self.num_envs = config.num_envs
+        self.signal_num = signal_num
         self.config = config
 
         state = mx.sym.Variable('state')
@@ -53,7 +52,7 @@ class A3c(object):
             optimizer_params=optimizer_params)
 
     def forward(self, state, signal, is_train):
-        self.model.reshape([('state', state.shape), ('signal', signal.shape)])
+        self.model.reshape([('state', (len(state), self.state_dim)), ('signal', signal.shape)])
         data_batch = mx.io.DataBatch(
             data=[mx.nd.array(state, ctx=self.config.ctx), signal], label=None)
         self.model.forward(data_batch, is_train=is_train)
@@ -72,7 +71,7 @@ class ComNet(object):
             data=net, name='fc1', num_hidden=100, no_bias=True)
         net = mx.sym.Activation(data=net, name='relu1', act_type="relu")
         signal = mx.symbol.FullyConnected(data=net, name='signal', num_hidden=signal_num)
-        self.signal = mx.symbol.Activation(data=signal, name="act", act_type="tanh")
+        self.signal = mx.symbol.Activation(data=signal, name="com", act_type="tanh")
         self.model = mx.mod.Module(self.signal, data_names=('state',),
                                    label_names=None)
 
@@ -93,16 +92,8 @@ class ComNet(object):
             kvstore='local', optimizer=config.update_rule,
             optimizer_params=optimizer_params)
 
-    def forward(self, data, is_train):
-        self.model.reshape([('state', data.shape)])
-        data_batch = mx.io.DataBatch(data=[mx.nd.array(data, ctx=self.config.ctx)], label=None)
+    def forward(self, state, is_train):
+        self.model.reshape([('state', (len(state), len(state[0])))])
+        data_batch = mx.io.DataBatch(data=[mx.nd.array(state, ctx=self.config.ctx)], label=None)
         self.model.forward(data_batch, is_train=is_train)
         return self.model.get_outputs()
-
-
-def compute_adv(action_num, action, neg_advs_v, q_ctx):
-    neg_advs_np = np.zeros((len(neg_advs_v), action_num), dtype=np.float32)
-    action = np.array(list(chain.from_iterable(action)))
-    neg_advs_np[np.arange(neg_advs_np.shape[0]), action] = neg_advs_v
-    neg_advs = mx.nd.array(neg_advs_np, ctx=q_ctx)
-    return neg_advs

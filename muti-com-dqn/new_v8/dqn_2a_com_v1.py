@@ -79,14 +79,11 @@ if __name__ == '__main__':
         envs[0].force_fps = False
         envs[0].game.draw = True
         envs[0].display_screen = True
-        replay_start_size = 32
         a1_A3c_file = 'a1_A3c/network-dqn_mx0012.params'
         a2_A3c_file = 'a2_A3c/network-dqn_mx0012.params'
         a1_comNet_file = 'a1_comNet/network-dqn_mx0012.params'
         a2_comNet_file = 'a2_comNet/network-dqn_mx0012.params'
 
-    action_set = envs[0].get_action_set()
-    action_map = []
     action_set = envs[0].get_action_set()
     action_map1 = []
     for action in action_set[0].values():
@@ -134,8 +131,10 @@ if __name__ == '__main__':
             collisions = [0.0] * len(envs)
             episode_reward = np.zeros(num_envs, dtype=np.float)
             episode_step = 0
-            env_ob, env_action = _2d_list(num_envs), _2d_list(num_envs)
-            env_reward, env_value = _2d_list(num_envs), _2d_list(num_envs)
+            env_ob1, env_ob2 = _2d_list(num_envs), _2d_list(num_envs)
+            env_action1, env_action2 = _2d_list(num_envs), _2d_list(num_envs)
+            env_value1, env_value2 = _2d_list(num_envs), _2d_list(num_envs)
+            env_reward1, env_reward2 = _2d_list(num_envs), _2d_list(num_envs)
 
             for env in envs:
                 env.reset_game()
@@ -149,11 +148,20 @@ if __name__ == '__main__':
 
             while not all_done:
 
-                signal1 = a1_comNet.model.forward(step_ob[:, :74], is_train=False)
-                signal2 = a2_comNet.model.forward(step_ob[:, -74:], is_train=False)
+                a1_ob = step_ob[:, :74]
+                a2_ob = step_ob[:, -74:]
 
-                _, step_value1, _, step_policy1 = a1_A3c.model.forward(step_ob[:, :74], is_train=False)
-                _, step_value2, _, step_policy2 = a2_A3c.model.forward(step_ob[:, -74:], is_train=False)
+                signal1 = a1_comNet.forward(a2_ob, is_train=False)[0]
+                signal2 = a2_comNet.forward(a1_ob, is_train=False)[0]
+
+                _, step_value1, _, step_policy1 = a1_A3c.forward(a1_ob, signal1, is_train=False)
+                _, step_value2, _, step_policy2 = a2_A3c.forward(a2_ob, signal2, is_train=False)
+
+                step_policy1 = step_policy1.asnumpy()
+                step_policy2 = step_policy2.asnumpy()
+
+                step_value1 = step_value1.asnumpy()
+                step_value2 = step_value2.asnumpy()
 
                 us1 = np.random.uniform(size=step_policy1.shape[0])[:, np.newaxis]
                 step_action1 = (np.cumsum(step_policy1, axis=1) > us1).argmax(axis=1)
@@ -165,10 +173,19 @@ if __name__ == '__main__':
                     if not done[i]:
                         next_ob, reward, done[i] = env.act_action(
                             [action_map1[step_action1[i]], action_map2[step_action2[i]]])
-                        env_ob[i].append(step_ob[i])
-                        env_action[i].append([step_action1[i], step_action2[i]])
-                        env_value[i].append([step_value1[i][0], step_value2[i][0]])
-                        env_reward[i].append(reward)
+
+                        env_ob1[i].append(step_ob[i][:74])
+                        env_ob2[i].append(step_ob[i][-74:])
+
+                        env_action1[i].append(step_action1[i])
+                        env_action2[i].append(step_action2[i])
+
+                        env_value1[i].append(step_value1[i][0])
+                        env_value2[i].append(step_value2[i][0])
+
+                        env_reward1[i].append(reward[0])
+                        env_reward2[i].append(reward[1])
+
                         episode_reward[i] += reward[0]
                         if reward[0] < 0:
                             collisions[i] += 1
@@ -177,103 +194,84 @@ if __name__ == '__main__':
 
                 if t == t_max:
 
-                    data_batch1 = mx.io.DataBatch(data=[mx.nd.array(step_ob[:, :74], ctx=q_ctx)], label=None)
-                    data_batch2 = mx.io.DataBatch(data=[mx.nd.array(step_ob[:, -74:], ctx=q_ctx)], label=None)
+                    a1_ob = step_ob[:, :74]
+                    a2_ob = step_ob[:, -74:]
 
-                    a1_comNet.model.forward(data_batch1, is_train=False)
-                    a2_comNet.model.forward(data_batch2, is_train=False)
+                    signal1 = a1_comNet.forward(a2_ob, is_train=False)[0]
+                    signal2 = a2_comNet.forward(a1_ob, is_train=False)[0]
 
-                    signal1 = a1_comNet.model.get_outputs()[0]
-                    signal2 = a2_comNet.model.get_outputs()[0]
+                    extra_value1 = a1_A3c.forward(a1_ob, signal1, is_train=False)[1]
+                    extra_value2 = a2_A3c.forward(a2_ob, signal2, is_train=False)[1]
 
-                    data_batch1 = mx.io.DataBatch(
-                        data=[mx.nd.array(step_ob[:, :74], ctx=q_ctx), mx.nd.array(signal1, ctx=q_ctx)],
-                        label=None)
-                    data_batch2 = mx.io.DataBatch(
-                        data=[mx.nd.array(step_ob[:, -74:], ctx=q_ctx), mx.nd.array(signal2, ctx=q_ctx)],
-                        label=None)
-
-                    a1_A3c.model.forward(data_batch1, is_train=False)
-                    a2_A3c.model.forward(data_batch2, is_train=False)
-
-                    extra_value1 = a1_A3c.model.get_outputs()[1].asnumpy()
-                    extra_value2 = a2_A3c.model.get_outputs()[1].asnumpy()
+                    extra_value1 = extra_value1.asnumpy()
+                    extra_value2 = extra_value2.asnumpy()
 
                     for i in range(num_envs):
                         if not done[i]:
-                            env_value[i].append([extra_value1[i][0], extra_value2[i][1]])
+                            env_value1[i].append(extra_value1[i][0])
+                            env_value1[i].append(extra_value2[i][0])
                         else:
-                            env_value[i].append([0.0, 0.0])
+                            env_value1[i].append(0.0)
+                            env_value2[i].append(0.0)
 
                     advs_p1 = []
                     advs_p2 = []
-                    for i in xrange(len(env_value)):
-                        R1 = env_value[i][-1][0]
-                        R1 = env_value[i][-1][1]
+                    for i in xrange(len(env_value1)):
+                        R1 = env_value1[i][-1]
+                        R2 = env_value2[i][-1]
                         tmp_R1 = []
                         tmp_R2 = []
-                        for j in range(len(env_reward[i]))[::-1]:
-                            R1 = env_reward[i][j][0] + gamma * R1
-                            R2 = env_reward[i][j][1] + gamma * R2
-                            tmp_R1.append(R1 - env_value[i][j][0])
-                            tmp_R2.append(R2 - env_value[i][j][1])
+                        for j in range(len(env_reward1[i]))[::-1]:
+                            R1 = env_reward1[i][j] + gamma * R1
+                            R2 = env_reward2[i][j] + gamma * R2
+                            tmp_R1.append(R1 - env_value1[i][j])
+                            tmp_R2.append(R2 - env_value2[i][j])
                         advs_p1.extend(tmp_R1[::-1])
                         advs_p2.extend(tmp_R2[::-1])
 
-                    neg_advs_v1 = -np.asarray(advs_p1)
-                    neg_advs_v2 = -np.asarray(advs_p2)
+                    a1_advs = -np.asarray(advs_p1)
+                    a2_advs = -np.asarray(advs_p2)
+                    env_action1 = np.array(env_action1)
+                    env_action2 = np.array(env_action2)
 
-                    env_action = np.asarray(env_action)
+                    a1_advs_grads = compute_adv(neg_advs_v=a1_advs, action_num=action_num,
+                                                action=env_action1,
+                                                q_ctx=q_ctx)
+                    a2_advs_grads = compute_adv(neg_advs_v=a2_advs, action_num=action_num,
+                                                action=env_action2,
+                                                q_ctx=q_ctx)
 
-                    neg_advs1 = compute_adv(neg_advs_v=neg_advs_v1, action_num=action_num, action=env_action[:, :, 0],
-                                            q_ctx=q_ctx)
-                    neg_advs2 = compute_adv(neg_advs_v=neg_advs_v2, action_num=action_num, action=env_action[:, :, 1],
-                                            q_ctx=q_ctx)
-                    v_grads1 = mx.nd.array(0.5 * neg_advs_v1[:, np.newaxis],
-                                           ctx=q_ctx)
-                    v_grads2 = mx.nd.array(0.5 * neg_advs_v2[:, np.newaxis],
-                                           ctx=q_ctx)
+                    a1_value_grads = mx.nd.array(0.5 * a1_advs[:, np.newaxis],
+                                                 ctx=q_ctx)
+                    a2_value_grads = mx.nd.array(0.5 * a2_advs[:, np.newaxis],
+                                                 ctx=q_ctx)
 
-                    env_ob = np.asarray(list(chain.from_iterable(env_ob)))
-                    data_batch1 = mx.io.DataBatch(data=[mx.nd.array(env_ob[:, :74], ctx=q_ctx)], label=None)
-                    data_batch2 = mx.io.DataBatch(data=[mx.nd.array(env_ob[:, -74:], ctx=q_ctx)], label=None)
+                    a1_env_ob = np.asarray(list(chain.from_iterable(env_ob1)))
+                    a2_env_ob = np.asarray(list(chain.from_iterable(env_ob2)))
 
-                    a1_comNet.model.reshape([('data', (len(env_ob), 74))])
-                    a2_comNet.model.reshape([('data', (len(env_ob), 74))])
+                    signal1 = a1_comNet.forward(a2_env_ob, is_train=True)[0]
+                    signal2 = a2_comNet.forward(a1_env_ob, is_train=True)[0]
 
-                    a1_comNet.model.forward(data_batch1, is_train=True)
-                    a2_comNet.model.forward(data_batch2, is_train=True)
+                    a1_A3c.forward(a1_env_ob, signal1, is_train=True)
+                    a2_A3c.forward(a2_env_ob, signal2, is_train=True)
 
-                    signal1 = a1_comNet.model.get_outputs()
-                    signal2 = a2_comNet.model.get_outputs()
-
-                    a1_A3c.model.reshape([('data', (len(env_ob), 78))])
-                    a2_A3c.model.reshape([('data', (len(env_ob), 78))])
-                    data_batch1 = mx.io.DataBatch(
-                        data=[mx.nd.array(env_ob[:, :74], ctx=q_ctx), mx.nd.array(signal1, ctx=q_ctx)],
-                        label=None)
-                    data_batch2 = mx.io.DataBatch(
-                        data=[mx.nd.array(env_ob[:, -74:], ctx=q_ctx), mx.nd.array(signal2, ctx=q_ctx)],
-                        label=None)
-
-                    a1_A3c.model.forward(data_batch1, is_train=True)
-                    a2_A3c.model.forward(data_batch2, is_train=True)
-
-                    a1_A3c.model.backward(out_grads=[v_grads1])
-                    a2_A3c.model.backward(out_grads=[v_grads2])
+                    a1_A3c.model.backward(out_grads=[a1_advs_grads, a1_value_grads])
+                    a2_A3c.model.backward(out_grads=[a2_advs_grads, a2_value_grads])
                     a1_A3c.model.update()
                     a2_A3c.model.update()
 
-                    a1_comNet.model.backward(out_grads=[a2_A3c.model.exe.grad_dict['signal'][:]])
-                    a2_comNet.model.backward(out_grads=[a1_A3c.model.exe.grad_dict['signal'][:]])
+                    a1_comNet.model.backward(out_grads=[a2_A3c.model._exec_group.execs[0].grad_dict['signal'][:]])
+                    a2_comNet.model.backward(out_grads=[a1_A3c.model._exec_group.execs[0].grad_dict['signal'][:]])
                     a1_comNet.model.update()
                     a2_comNet.model.update()
 
-                    env_ob, env_action = _2d_list(num_envs), _2d_list(num_envs)
-                    env_reward, env_value = _2d_list(num_envs), _2d_list(num_envs)
+                    env_ob1, env_ob2 = _2d_list(num_envs), _2d_list(num_envs)
+                    env_action1, env_action2 = _2d_list(num_envs), _2d_list(num_envs)
+                    env_value1, env_value2 = _2d_list(num_envs), _2d_list(num_envs)
+                    env_reward1, env_reward2 = _2d_list(num_envs), _2d_list(num_envs)
 
                     training_steps += 1
-                    episode_advs += np.mean(neg_advs_v1)
+                    episode_advs += np.mean(a1_advs)
 
                     t = 0
                 all_done = np.all(done)
@@ -297,8 +295,9 @@ if __name__ == '__main__':
 
         end = time.time()
         fps = steps_per_epoch / (end - time_episode_start)
-        a1_policy.model.save_params('policy1/network-dqn_mx%04d.params' % epoch)
-        a2_policy.model.save_params('policy2/network-dqn_mx%04d.params' % epoch)
-        Qnet.model.save_params('Qnet/network-dqn_mx%04d.params' % epoch)
+        a1_A3c.model.save_params('a1_A3c/network-dqn_mx%04d.params' % epoch)
+        a2_A3c.model.save_params('a2_A3c/network-dqn_mx%04d.params' % epoch)
+        a1_comNet.model.save_params('a1_comNet/network-dqn_mx%04d.params' % epoch)
+        a2_comNet.model.save_params('a2_comNet/network-dqn_mx%04d.params' % epoch)
         logging.info("Epoch:%d, FPS:%f, Avg Reward: %f/%d"
                      % (epoch, fps, np.mean(epoch_reward) / float(episode), episode))

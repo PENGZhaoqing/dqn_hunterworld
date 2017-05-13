@@ -1,14 +1,12 @@
 from actionQnet_ import *
 import argparse
 from itertools import chain
-import time
 from utils import *
 import numpy as np
 import mxnet as mx
 from config import Config
-from hunterworld import HunterWorld
-from ple import PLE
 import matplotlib.pyplot as plt
+from Env import Env
 
 root = logging.getLogger()
 root.setLevel(logging.DEBUG)
@@ -40,40 +38,27 @@ if __name__ == '__main__':
     config = Config(args)
     np.random.seed(args.seed)
 
-    if not os.path.exists('A3c'):
-        os.makedirs('A3c')
+    if not os.path.exists('a3c'):
+        os.makedirs('a3c')
 
     testing = False
     if testing:
         args.num_envs = 1
-    else:
-        logging_config("log", "single-output-custom")
-
-    rewards = {
-        "positive": 1.0,
-        "negative": -1.0,
-        "tick": -0.002,
-        "loss": -2.0,
-        "win": 2.0
-    }
+        # else:
+        # logging_config("log", "single-output-custom")
 
     envs = []
     for i in range(args.num_envs):
-        game = HunterWorld(width=256, height=256, num_preys=10, draw=False,
-                           num_hunters=1, num_toxins=5)
-        env = PLE(game, fps=30, force_fps=True, display_screen=False, reward_values=rewards,
-                  resized_rows=80, resized_cols=80, num_steps=3)
-        envs.append(env)
+        envs.append(Env())
 
     params_file = None
     if testing:
         envs[0].force_fps = False
         envs[0].game.draw = True
         envs[0].display_screen = True
-        replay_start_size = 32
-        params_file = 'A3c/network-dqn_mx0012.params'
+        params_file = 'a3c/network-dqn_mx0012.params'
 
-    a3c = Agent(74, 4, config=config)
+    a3c = A3c(74, 4, config=config)
 
     if params_file is not None:
         a3c.model.load_params(params_file)
@@ -82,7 +67,7 @@ if __name__ == '__main__':
     logging.info('config=%s' % config.__dict__)
     print_params(a3c.model)
 
-    action_set = envs[0].get_action_set()
+    action_set = envs[0].ple.get_action_set()
     action_map = []
     for action in action_set[0].values():
         action_map.append(action)
@@ -108,13 +93,11 @@ if __name__ == '__main__':
             collisions = [0.0] * len(envs)
             episode_reward = np.zeros(num_envs, dtype=np.float)
             episode_step = 0
-            env_ob, env_action = _2d_list(num_envs), _2d_list(num_envs)
-            env_reward, env_value = _2d_list(num_envs), _2d_list(num_envs)
             for env in envs:
-                env.reset_game()
-            step_ob = [env.get_states() for env in envs]
-
-            done = [False] * num_envs
+                env.ple.reset_game()
+                env.clear()
+            step_ob = [env.ple.get_states() for env in envs]
+            step_ob_np = np.array(step_ob)
             all_done = False
             t = 1
             training_steps = 0
@@ -133,13 +116,13 @@ if __name__ == '__main__':
                 step_action = (np.cumsum(step_policy, axis=1) > us).argmax(axis=1)
 
                 for i, env in enumerate(envs):
-                    if not done[i]:
-                        next_ob, reward, done[i] = env.act_action([action_map[step_action[i]]])
-                        env_ob[i].append(step_ob[i])
-                        env_action[i].append(step_action[i])
-                        env_value[i].append(step_value[i][0])
-                        env_reward[i].append(reward[0])
+                    if not env.done:
+                        next_ob, reward, terminal_flag = env.ple.act_action(
+                            [action_map[step_action[i]]])
+                        env.add(step_ob[i], np.array(step_ob_np[i]), step_action[i], step_value[i][0], reward)
+                        env.done = terminal_flag
                         step_ob[i] = next_ob
+                        step_ob_np[i] = next_ob
                         episode_reward[i] += reward[0]
                         if reward[0] < 0:
                             collisions[i] += 1
@@ -149,46 +132,60 @@ if __name__ == '__main__':
                     data_batch = mx.io.DataBatch(data=[mx.nd.array(step_ob, ctx=q_ctx)], label=None)
                     a3c.model.forward(data_batch, is_train=False)
                     _, extra_value, _, _ = a3c.model.get_outputs()
-
                     extra_value = extra_value.asnumpy()
-                    for i in range(num_envs):
-                        if done[i]:
-                            env_value[i].append(0.0)
+                    for idx, env in enumerate(envs):
+                        if env.done:
+                            env.value.append(0.0)
                         else:
-                            env_value[i].append(extra_value[i][0])
+                            env.value.append(extra_value[idx][0])
 
                     advs = []
-                    for i in range(len(env_value)):
-                        R = env_value[i][-1]
+                    for env in envs:
+                        R = env.value[-1]
                         tmp = []
-                        for j in range(len(env_reward[i]))[::-1]:
-                            R = env_reward[i][j] + gamma * R
-                            tmp.append(R - env_value[i][j])
+                        for j in range(len(env.reward))[::-1]:
+                            R = env.reward[j][0] + gamma * R
+                            tmp.append(R - env.value[j])
                         advs.extend(tmp[::-1])
+
                     neg_advs_v = -np.asarray(advs)
-
+                    env_action = []
+                    for env in envs:
+                        for action in env.action:
+                            env_action.append(action)
+                    # action = np.asarray(list(chain.from_iterable(env_action)))
                     neg_advs_np = np.zeros((len(advs), action_num), dtype=np.float32)
-                    action = np.array(list(chain.from_iterable(env_action)))
-                    neg_advs_np[np.arange(neg_advs_np.shape[0]), action] = neg_advs_v
+                    neg_advs_np[np.arange(neg_advs_np.shape[0]), env_action] = neg_advs_v
                     neg_advs = mx.nd.array(neg_advs_np, ctx=q_ctx)
-
                     value_grads = mx.nd.array(config.vf_wt * neg_advs_v[:, np.newaxis],
                                               ctx=q_ctx)
-                    env_ob = list(chain.from_iterable(env_ob))
+
+                    env_ob = []
+                    env_ob_np = []
+
+                    for env in envs:
+                        for idx, ob in enumerate(env.ob):
+                            env_ob.append(env.ob[idx])
+                            env_ob_np.append(env.ob_np[idx])
+                            # print env.ob[idx]
+                            # print
+                            # print env.ob_np[idx]
+                            # print
+
+                    # extend_ob = list(chain.from_iterable(env_ob))
                     a3c.model.reshape([('data', (len(env_ob), 74))])
-                    data_batch = mx.io.DataBatch(data=[mx.nd.array(env_ob, ctx=q_ctx)], label=None)
+                    data_batch = mx.io.DataBatch(data=[mx.nd.array(env_ob_np, ctx=q_ctx)], label=None)
                     a3c.model.forward(data_batch, is_train=True)
                     a3c.model.backward(out_grads=[neg_advs, value_grads])
                     a3c.model.update()
 
-                    env_ob, env_action = _2d_list(num_envs), _2d_list(num_envs)
-                    env_reward, env_value = _2d_list(num_envs), _2d_list(num_envs)
+                    for env in envs:
+                        env.clear()
 
                     training_steps += 1
                     episode_advs += np.mean(neg_advs_v)
-
                     t = 0
-                all_done = np.all(done)
+                all_done = np.all([env.done for env in envs])
                 t += 1
 
             steps_left -= episode_step
@@ -209,6 +206,6 @@ if __name__ == '__main__':
 
         end = time.time()
         fps = steps_per_epoch / (end - time_episode_start)
-        a3c.model.save_params('A3c/network-dqn_mx%04d.params' % epoch)
+        a3c.model.save_params('a2_A3c/network-dqn_mx%04d.params' % epoch)
         logging.info("Epoch:%d, FPS:%f, Avg Reward: %f/%d"
                      % (epoch, fps, np.mean(epoch_reward) / float(episode), episode))

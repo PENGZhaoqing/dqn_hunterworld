@@ -1,5 +1,5 @@
 from env.pygamewrapper import PyGameWrapper
-from env.v9.agent import Hunter, Prey, Toxin
+from agent import Hunter, Prey, Toxin
 from env.utils import *
 from pygame.constants import *
 from env.vec2d import Vec2d
@@ -97,7 +97,7 @@ class HunterWorld(PyGameWrapper):
                                    (hunter.velocity[1]) / self.height),
                                   dtype=np.float16))
             self.observation.append(state)
-        return np.asarray(self.observation).flatten()
+        return self.observation
 
     def _rand_start(self, agents):
         pos = []
@@ -148,7 +148,7 @@ class HunterWorld(PyGameWrapper):
         return self.score
 
     def game_over(self):
-        return self.hungrey < -1
+        return False
 
     def init(self):
         for ID, kind in enumerate(self.agent_map):

@@ -162,6 +162,7 @@ if __name__ == '__main__':
                   (i, time.time() - tic, time.time() - start,
                    (i + 1) * args.num_envs, np.mean(episode_rs),
                    running_reward))
+            print str(episode_rs)
 
         if args.save_every > 0:
             if i % args.save_every == 0:

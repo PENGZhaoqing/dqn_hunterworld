@@ -1,22 +1,23 @@
 from env.pygamewrapper import PyGameWrapper
-from env.v9.agent import Hunter, Prey, Toxin
+from env.v8.agent import Hunter, Prey, Toxin
 from env.utils import *
 from pygame.constants import *
 from env.vec2d import Vec2d
 from math import sqrt, sin, cos
 
 COLOR_MAP = {"white": (255, 255, 255),
-             "hunter": {0: (0, 0, 255), 1: (3, 168, 158), 2: (64, 244, 205)},
+             "hunter": (20, 20, 255),
              "prey": (20, 255, 20),
              "toxin": (255, 20, 20),
-             'black': (144, 144, 144)}
+             'black': (0, 0, 0)}
+
 
 class HunterWorld(PyGameWrapper):
     def __init__(self, draw=False,
                  width=48,
                  height=48,
                  num_preys=10,
-                 num_hunters=3, num_toxins=5):
+                 num_hunters=4, num_toxins=5):
 
         self.actions = {0: {
             "up": K_w,
@@ -41,6 +42,7 @@ class HunterWorld(PyGameWrapper):
         }}
 
         PyGameWrapper.__init__(self, width, height, actions=self.actions)
+
         self.draw = draw
         self.BG_COLOR = COLOR_MAP['white']
         self.EYES = 24
@@ -48,7 +50,7 @@ class HunterWorld(PyGameWrapper):
         self.HUNTER_NUM = num_hunters
         self.HUNTER_COLOR = COLOR_MAP['hunter']
         self.HUNTER_SPEED = width * 0.25
-        self.HUNTER_RADIUS = percent_round_int(width, 0.03)
+        self.HUNTER_RADIUS = percent_round_int(width, 0.045)
         self.hunters = pygame.sprite.Group()
         self.HUNTERS = []
 
@@ -57,14 +59,14 @@ class HunterWorld(PyGameWrapper):
         self.PREY_NUM = num_preys
         self.PREY_RADIUS = percent_round_int(width, 0.03)
         self.preys = pygame.sprite.Group()
-        self.PREYS_D = self._fix_prey_direction()
+        self.PREYS_D = self._rand_direction(num_preys)
 
         self.TOXIN_NUM = num_toxins
         self.TOXIN_COLOR = COLOR_MAP['toxin']
         self.TOXIN_SPEED = 0.25 * width
         self.TOXIN_RADIUS = percent_round_int(width, 0.03)
         self.toxins = pygame.sprite.Group()
-        self.TOXINS_D = self._fix_toxin_direction()
+        self.TOXINS_D = self._rand_direction(num_toxins)
 
         self.AGENTS = []
         self.agents = []
@@ -78,26 +80,6 @@ class HunterWorld(PyGameWrapper):
         self.init_flag = True
         self.observation = []
         self.hungrey = 0
-
-    def get_game_state(self):
-        self.observation[:] = []
-        for hunter in self.hunters:
-            other_agents = []
-            for agent in self.AGENTS:
-                if agent is hunter:
-                    continue
-                if count_distant(agent, hunter) <= agent.radius + hunter.out_radius:
-                    other_agents.append(agent)
-            ob = self.observe1(hunter, other_agents)
-            if self.draw:
-                self.draw_line(hunter, ob)
-            state = np.append(ob,
-                              np.array(
-                                  ((hunter.velocity[0]) / self.width,
-                                   (hunter.velocity[1]) / self.height),
-                                  dtype=np.float16))
-            self.observation.append(state)
-        return np.asarray(self.observation).flatten()
 
     def _rand_start(self, agents):
         pos = []
@@ -116,10 +98,11 @@ class HunterWorld(PyGameWrapper):
         return pos
 
     def _fix_start(self):
-        pos_list = [[0.45, 0.45], [0.65, 0.65], [0.25, 0.85],
+        pos_list = [[0.45, 0.45], [0.65, 0.65],
                     [0.25, 0.15], [0.75, 0.85], [0.65, 0.15], [0.15, 0.85], [0.25, 0.35],
                     [0.95, 0.65], [0.75, 0.45], [0.75, 0.55], [0.65, 0.95], [0.05, 0.05],
-                    [0.56, 0.84], [0.67, 0.42], [0.98, 0.12], [0.45, 0.26], [0.48, 0.15]]
+                    [0.56, 0.84], [0.67, 0.42], [0.98, 0.12], [0.45, 0.26], [0.48, 0.15],
+                    [0.36, 0.45], [0.89, 0.12], [0.45, 0.76], [0.89, 0.89], [0.75, 0.12], ]
         for pos in pos_list:
             pos[0] = pos[0] * self.width
             pos[1] = pos[1] * self.height
@@ -130,19 +113,6 @@ class HunterWorld(PyGameWrapper):
         for _ in range(num):
             dir.append(normalization([random() - 0.5, random() - 0.5]))
         return dir
-
-    def _fix_prey_direction(self):
-        dir_list = [[-0.25, 0.15], [0.75, -0.85], [-0.65, 0.15], [-0.15, -0.85], [0.25, 0.35],
-                    [0.95, -0.65], [0.75, 0.45], [-0.75, 0.55], [0.65, 0.95], [0.05, -0.05]]
-        for pos in dir_list:
-            pos = normalization(pos)
-        return dir_list
-
-    def _fix_toxin_direction(self):
-        dir_list = [[0.56, 0.84], [0.67, 0.42], [0.98, 0.12], [0.45, 0.26], [0.48, 0.15]]
-        for pos in dir_list:
-            pos = normalization(pos)
-        return dir_list
 
     def get_score(self):
         return self.score
@@ -156,7 +126,7 @@ class HunterWorld(PyGameWrapper):
                 hunter = Hunter(
                     ID,
                     self.HUNTER_RADIUS,
-                    self.HUNTER_COLOR[ID],
+                    self.HUNTER_COLOR,
                     self.HUNTER_SPEED,
                     self.width,
                     self.height
@@ -205,7 +175,6 @@ class HunterWorld(PyGameWrapper):
             agent.init_direction([0, 0])
 
     def reset(self):
-
         if self.init_flag:
             self.init_flag = False
             self.init()
@@ -246,8 +215,27 @@ class HunterWorld(PyGameWrapper):
                         hunters[idx].dx = 0
                         hunters[idx].accelerate = True
 
-    # @profile
+    def get_game_state(self):
+        self.observation[:] = []
+        for hunter in self.hunters:
+            other_agents = []
+            for agent in self.AGENTS:
+                if agent is hunter:
+                    continue
+                if count_distant(agent, hunter) <= agent.radius + hunter.out_radius:
+                    other_agents.append(agent)
+            ob = self.observe1(hunter, other_agents)
+            if self.draw:
+                self.draw_line(hunter, ob)
+            state = np.append(ob,
+                              np.array(
+                                  ((hunter.velocity[0]) / self.width,
+                                   (hunter.velocity[1]) / self.height),
+                                  dtype=np.float16))
+            self.observation.append(state)
+        return np.array(self.observation).flatten()
 
+    # @profile
     def step(self, dt):
 
         self.reward[:] = 0.0
@@ -259,25 +247,20 @@ class HunterWorld(PyGameWrapper):
         self.screen.fill(self.BG_COLOR)
         self._handle_player_events(self.HUNTERS)
 
-        for prey in self.preys:
-            hunter_pair = []
-            for hunter in self.hunters:
-                if count_distant(prey, hunter) <= (hunter.range - prey.radius):
-                    hunter_pair.append(hunter.id)
-            if len(hunter_pair) >= 2:
-                for hunter_id in hunter_pair:
-                    self.reward[hunter_id] += self.rewards["positive"]
-                self.hungrey += self.rewards["positive"]
-                prey.rand_orientation()
-                prey.rand_pos()
-
         for hunter in self.hunters:
             for toxin in self.toxins:
-                if count_distant(toxin, hunter) < (hunter.radius + toxin.radius):
+                if count_distant(toxin, hunter) <= (hunter.radius + toxin.radius):
                     self.lives -= 1
                     toxin.rand_orientation()
                     toxin.rand_pos()
                     self.reward[hunter.id] += self.rewards["negative"]
+
+            for prey in self.preys:
+                if count_distant(prey, hunter) <= (hunter.radius + prey.radius):
+                    prey.rand_orientation()
+                    prey.rand_pos()
+                    self.reward[hunter.id] += self.rewards["positive"]
+                    self.hungrey += self.rewards["positive"]
 
         self.hunters.update(dt)
         self.preys.update(dt)
@@ -288,6 +271,7 @@ class HunterWorld(PyGameWrapper):
             self.preys.draw(self.screen)
             self.toxins.draw(self.screen)
             self.get_game_state()
+
         return self.reward
 
     def draw_line(self, hunter, observation):
@@ -307,7 +291,7 @@ class HunterWorld(PyGameWrapper):
             elif index == 0:
                 color = COLOR_MAP["prey"]
             elif index == 1:
-                color = COLOR_MAP["hunter"][hunter.id]
+                color = COLOR_MAP["hunter"][0]
             elif index == 2:
                 color = COLOR_MAP["toxin"]
 
@@ -360,13 +344,28 @@ class HunterWorld(PyGameWrapper):
         re = [closest[0] - seg_a[0], closest[1] - seg_a[1]]
         return sqrt(re[0] ** 2 + re[1] ** 2) - le - circ_rad
 
+        # @profile
+        #  def line_distance1(self, seg_a, seg_v_unit, circ_pos, circ_rad):
+        #      pt_v = Vec2d(circ_pos[0] - seg_a[0], circ_pos[1] - seg_a[1])
+        #      proj = pt_v.dot(seg_v_unit)
+        #      if proj <= 0:
+        #          return False
+        #      proj_v = seg_v_unit * proj
+        #      closest = proj_v + seg_a
+        #      dist_v = circ_pos - closest
+        #      offset = dist_v.length
+        #      if offset >= circ_rad:
+        #          return False
+        #      le = math.sqrt(circ_rad ** 2 - offset ** 2)
+        #      return (closest - seg_a).length - le
+
 
 if __name__ == "__main__":
     import numpy as np
     import time
 
     pygame.init()
-    game = HunterWorld(width=258, height=258, num_preys=10, num_hunters=3, draw=True)
+    game = HunterWorld(width=258, height=258, num_preys=10, num_hunters=2, num_toxins=10, draw=True)
     game.screen = pygame.display.set_mode(game.get_screen_dims(), 0, 32)
     game.clock = pygame.time.Clock()
     game.rng = np.random.RandomState(24)
@@ -379,7 +378,7 @@ if __name__ == "__main__":
         if game.game_over():
             game.init()
         reward = game.step(dt)
-        # print game.lives
+        # print game.hungrey
         # if np.sum(reward) != 0.0:
         #     print reward
         pygame.display.update()
